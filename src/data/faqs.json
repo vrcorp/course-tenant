@@ -1,0 +1,5 @@
+[
+  { "id": "q1", "question": "Apa itu VidemyHub?", "answer": "Platform terpadu untuk hosting video dan LMS (kursus)." },
+  { "id": "q2", "question": "Bisakah saya menjual kursus?", "answer": "Bisa. Gunakan modul Commerce untuk produk, pesanan, dan invoice." },
+  { "id": "q3", "question": "Apakah ada uji coba?", "answer": "Ada paket gratis untuk memulai sebelum upgrade." }
+]

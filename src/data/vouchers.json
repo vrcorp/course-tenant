@@ -1,0 +1,4 @@
+[
+  { "code": "WELCOME10", "type": "percent", "value": 10, "description": "Diskon 10% untuk pengguna baru" },
+  { "code": "AFFIL5", "type": "fixed", "value": 50000, "description": "Potongan Rp50.000" }
+]

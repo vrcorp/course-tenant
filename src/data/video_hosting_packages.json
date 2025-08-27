@@ -1,0 +1,39 @@
+[
+  {
+    "id": "vh_starter",
+    "name": "Starter Hosting",
+    "price_per_month": 9,
+    "features": [
+      "50 GB storage",
+      "500 GB bandwidth",
+      "Analitik dasar",
+      "Embed aman"
+    ],
+    "limits": { "storage_gb": 50, "bandwidth_gb": 500 }
+  },
+  {
+    "id": "vh_pro",
+    "name": "Pro Hosting",
+    "price_per_month": 29,
+    "features": [
+      "500 GB storage",
+      "5 TB bandwidth",
+      "Analitik lanjutan",
+      "Restriksi domain & token akses",
+      "Watermark dinamis"
+    ],
+    "limits": { "storage_gb": 500, "bandwidth_gb": 5000 }
+  },
+  {
+    "id": "vh_business",
+    "name": "Business Hosting",
+    "price_per_month": 99,
+    "features": [
+      "Storage tak terbatas",
+      "Bandwidth tak terbatas",
+      "SLA tinggi & dukungan prioritas",
+      "Enkripsi & kontrol akses tingkat lanjut"
+    ],
+    "limits": { "storage_gb": -1, "bandwidth_gb": -1 }
+  }
+]

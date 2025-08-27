@@ -1,0 +1,4 @@
+[
+  { "id": "log-1", "type": "info", "message": "System initialized", "createdAt": "2025-01-03T09:00:00Z" },
+  { "id": "log-2", "type": "warning", "message": "High CPU usage detected", "createdAt": "2025-01-04T13:20:00Z" }
+]

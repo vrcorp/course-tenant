@@ -1,0 +1,32 @@
+[
+  {
+    "id": "acme",
+    "name": "Acme Academy",
+    "slug": "acme",
+    "domain": {
+      "type": "subdomain",
+      "value": "acme.videmyhub.io"
+    },
+    "packageId": "pro",
+    "branding": {
+      "logo": "https://placehold.co/160x48?text=Acme",
+      "primary": "#2563eb"
+    },
+    "quotas": { "students": 500, "courses": 50 }
+  },
+  {
+    "id": "nova",
+    "name": "Nova Learning",
+    "slug": "nova",
+    "domain": {
+      "type": "custom",
+      "value": "learn.nova.com"
+    },
+    "packageId": "business",
+    "branding": {
+      "logo": "https://placehold.co/160x48?text=Nova",
+      "primary": "#7c3aed"
+    },
+    "quotas": { "students": -1, "courses": -1 }
+  }
+]

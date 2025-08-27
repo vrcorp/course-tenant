@@ -1,0 +1,16 @@
+[
+  {
+    "tenantId": "acme",
+    "courses": [
+      { "id": "acme-react", "title": "React untuk Pemula", "thumbnail": "https://placehold.co/600x400?text=React+Acme", "price": 19 },
+      { "id": "acme-node", "title": "Node.js dari Nol", "thumbnail": "https://placehold.co/600x400?text=Node+Acme", "price": 29 }
+    ]
+  },
+  {
+    "tenantId": "nova",
+    "courses": [
+      { "id": "nova-ux", "title": "Dasar UX Design", "thumbnail": "https://placehold.co/600x400?text=UX+Nova", "price": 15 },
+      { "id": "nova-ml", "title": "Pengantar Machine Learning", "thumbnail": "https://placehold.co/600x400?text=ML+Nova", "price": 39 }
+    ]
+  }
+]

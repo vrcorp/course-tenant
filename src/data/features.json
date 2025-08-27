@@ -1,0 +1,32 @@
+[
+  {
+    "id": "f1",
+    "title": "Keamanan Data Terjamin",
+    "description": "Sistem keamanan berlapis dengan enkripsi data dan kontrol akses yang ketat untuk melindungi informasi pembelajaran Anda."
+  },
+  {
+    "id": "f2",
+    "title": "Video Pembelajaran HD",
+    "description": "Streaming video berkualitas tinggi dengan loading cepat dan dukungan berbagai perangkat untuk pengalaman belajar optimal."
+  },
+  {
+    "id": "f3",
+    "title": "Kursus Interaktif",
+    "description": "Kelola kursus, kuis, tugas, sertifikat, dan materi pembelajaran dalam satu platform yang mudah digunakan."
+  },
+  {
+    "id": "f4",
+    "title": "Akses Multi-Platform",
+    "description": "Belajar kapan saja, dimana saja melalui website, mobile app, atau tablet dengan sinkronisasi progress otomatis."
+  },
+  {
+    "id": "f5",
+    "title": "Sistem Pembayaran Mudah",
+    "description": "Berbagai metode pembayaran dan sistem voucher untuk memudahkan akses ke kursus premium."
+  },
+  {
+    "id": "f6",
+    "title": "Progress Tracking",
+    "description": "Pantau kemajuan belajar, skor quiz, dan pencapaian dengan dashboard analitik yang komprehensif."
+  }
+]

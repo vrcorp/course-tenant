@@ -1,0 +1,4 @@
+[
+  { "id": "pub-1", "name": "Public API", "key": "pk_live_xxxxx-public", "active": true, "createdAt": "2025-01-01T10:00:00Z" },
+  { "id": "srv-1", "name": "Server API", "key": "sk_live_xxxxx-server", "active": true, "createdAt": "2025-01-02T08:15:00Z" }
+]

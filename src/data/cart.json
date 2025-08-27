@@ -1,0 +1,41 @@
+[
+  {
+    "id": "cart-1",
+    "productId": "course-1",
+    "title": "React Advanced Course",
+    "type": "course",
+    "price": 299000,
+    "originalPrice": 399000,
+    "quantity": 1,
+    "thumbnail": "https://placehold.co/300x200/3b82f6/ffffff?text=React+Course",
+    "instructor": "John Doe",
+    "duration": "8 weeks",
+    "addedAt": "2024-01-15T10:30:00Z"
+  },
+  {
+    "id": "cart-2",
+    "productId": "video-1",
+    "title": "JavaScript Fundamentals Video Series",
+    "type": "video",
+    "price": 150000,
+    "originalPrice": 200000,
+    "quantity": 1,
+    "thumbnail": "https://placehold.co/300x200/10b981/ffffff?text=JS+Videos",
+    "instructor": "Jane Smith",
+    "duration": "4 hours",
+    "addedAt": "2024-01-16T14:20:00Z"
+  },
+  {
+    "id": "cart-3",
+    "productId": "sub-1",
+    "title": "Premium Monthly Subscription",
+    "type": "subscription",
+    "price": 99000,
+    "originalPrice": 99000,
+    "quantity": 1,
+    "thumbnail": "https://placehold.co/300x200/8b5cf6/ffffff?text=Premium+Sub",
+    "instructor": "VidemyHub",
+    "duration": "1 month",
+    "addedAt": "2024-01-17T09:15:00Z"
+  }
+]

@@ -1,0 +1,434 @@
+{
+  "categories": [
+    {
+      "id": "web-development",
+      "name": "Web Development",
+      "description": "Pelajari teknologi web terkini untuk membangun aplikasi modern",
+      "icon": "Code",
+      "color": "blue"
+    },
+    {
+      "id": "mobile-development",
+      "name": "Mobile Development",
+      "description": "Kembangkan aplikasi mobile untuk iOS dan Android",
+      "icon": "Smartphone",
+      "color": "green"
+    },
+    {
+      "id": "data-science",
+      "name": "Data Science",
+      "description": "Analisis data dan machine learning untuk insight bisnis",
+      "icon": "BarChart3",
+      "color": "purple"
+    },
+    {
+      "id": "design",
+      "name": "UI/UX Design",
+      "description": "Desain antarmuka yang menarik dan user-friendly",
+      "icon": "Palette",
+      "color": "pink"
+    },
+    {
+      "id": "business",
+      "name": "Business & Marketing",
+      "description": "Strategi bisnis dan pemasaran digital",
+      "icon": "TrendingUp",
+      "color": "orange"
+    },
+    {
+      "id": "cybersecurity",
+      "name": "Cybersecurity",
+      "description": "Keamanan siber dan perlindungan data",
+      "icon": "Shield",
+      "color": "red"
+    }
+  ],
+  "courses": [
+    {
+      "id": "c1",
+      "title": "Complete React Developer Course 2024",
+      "slug": "complete-react-developer-course-2024",
+      "description": "Pelajari React dari dasar hingga mahir dengan project nyata dan best practices terkini",
+      "instructor": {
+        "name": "Andi Pratama",
+        "avatar": "https://placehold.co/100x100?text=AP",
+        "bio": "Senior Frontend Developer dengan 8+ tahun pengalaman",
+        "rating": 4.9,
+        "students": 15420
+      },
+      "thumbnail": "https://placehold.co/600x400?text=React+Course&bg=61dafb&color=000",
+      "category": "web-development",
+      "level": "Beginner to Advanced",
+      "duration": "42 jam",
+      "lessons": 156,
+      "students": 8945,
+      "rating": 4.8,
+      "reviews": 2341,
+      "price": 299000,
+      "originalPrice": 499000,
+      "discount": 40,
+      "language": "Bahasa Indonesia",
+      "lastUpdated": "2024-01-15",
+      "certificate": true,
+      "features": [
+        "42 jam video on-demand",
+        "156 pelajaran terstruktur",
+        "15 project praktis",
+        "Source code lengkap",
+        "Sertifikat completion",
+        "Akses seumur hidup",
+        "Mobile & desktop access",
+        "Community support"
+      ],
+      "skills": ["React", "JavaScript", "JSX", "Hooks", "Redux", "Next.js"],
+      "requirements": [
+        "Pemahaman dasar HTML, CSS, dan JavaScript",
+        "Komputer dengan koneksi internet",
+        "Text editor (VS Code recommended)"
+      ],
+      "curriculum": [
+        {
+          "section": "Pengenalan React",
+          "lessons": 12,
+          "duration": "3 jam"
+        },
+        {
+          "section": "Components & Props",
+          "lessons": 18,
+          "duration": "4.5 jam"
+        },
+        {
+          "section": "State & Event Handling",
+          "lessons": 15,
+          "duration": "4 jam"
+        },
+        {
+          "section": "React Hooks",
+          "lessons": 25,
+          "duration": "6 jam"
+        },
+        {
+          "section": "Advanced Patterns",
+          "lessons": 20,
+          "duration": "5.5 jam"
+        },
+        {
+          "section": "Testing & Deployment",
+          "lessons": 16,
+          "duration": "4 jam"
+        }
+      ],
+      "featured": true,
+      "bestseller": true
+    },
+    {
+      "id": "c2",
+      "title": "TypeScript Mastery: From Zero to Hero",
+      "slug": "typescript-mastery-zero-to-hero",
+      "description": "Kuasai TypeScript untuk pengembangan aplikasi yang lebih robust dan maintainable",
+      "instructor": {
+        "name": "Sari Wijaya",
+        "avatar": "https://placehold.co/100x100?text=SW",
+        "bio": "Full Stack Developer & TypeScript Expert",
+        "rating": 4.8,
+        "students": 12300
+      },
+      "thumbnail": "https://placehold.co/600x400?text=TypeScript&bg=3178c6&color=fff",
+      "category": "web-development",
+      "level": "Intermediate",
+      "duration": "28 jam",
+      "lessons": 89,
+      "students": 5621,
+      "rating": 4.7,
+      "reviews": 1456,
+      "price": 249000,
+      "originalPrice": 399000,
+      "discount": 37,
+      "language": "Bahasa Indonesia",
+      "lastUpdated": "2024-01-20",
+      "certificate": true,
+      "features": [
+        "28 jam video berkualitas HD",
+        "89 pelajaran komprehensif",
+        "10 project hands-on",
+        "TypeScript playground",
+        "Sertifikat resmi",
+        "Lifetime access",
+        "Q&A support"
+      ],
+      "skills": ["TypeScript", "JavaScript", "Type Safety", "Generics", "Decorators"],
+      "requirements": [
+        "Pengetahuan JavaScript yang solid",
+        "Pengalaman dengan ES6+",
+        "Node.js basic knowledge"
+      ],
+      "featured": false,
+      "bestseller": true
+    },
+    {
+      "id": "c3",
+      "title": "Node.js & Express: Backend Development",
+      "slug": "nodejs-express-backend-development",
+      "description": "Bangun RESTful API dan backend applications dengan Node.js dan Express",
+      "instructor": {
+        "name": "Budi Santoso",
+        "avatar": "https://placehold.co/100x100?text=BS",
+        "bio": "Backend Engineer di Tech Startup",
+        "rating": 4.6,
+        "students": 9800
+      },
+      "thumbnail": "https://placehold.co/600x400?text=Node.js&bg=339933&color=fff",
+      "category": "web-development",
+      "level": "Intermediate",
+      "duration": "35 jam",
+      "lessons": 124,
+      "students": 4532,
+      "rating": 4.6,
+      "reviews": 987,
+      "price": 279000,
+      "originalPrice": 449000,
+      "discount": 38,
+      "language": "Bahasa Indonesia",
+      "lastUpdated": "2024-01-10",
+      "certificate": true,
+      "features": [
+        "35 jam konten premium",
+        "124 video lessons",
+        "8 real-world projects",
+        "Database integration",
+        "Authentication & security",
+        "Deployment strategies"
+      ],
+      "skills": ["Node.js", "Express.js", "MongoDB", "JWT", "REST API"],
+      "requirements": [
+        "JavaScript fundamentals",
+        "Basic understanding of web development",
+        "Familiarity with command line"
+      ],
+      "featured": true,
+      "bestseller": false
+    },
+    {
+      "id": "c4",
+      "title": "Flutter Mobile App Development",
+      "slug": "flutter-mobile-app-development",
+      "description": "Kembangkan aplikasi mobile cross-platform dengan Flutter dan Dart",
+      "instructor": {
+        "name": "Maya Indira",
+        "avatar": "https://placehold.co/100x100?text=MI",
+        "bio": "Mobile App Developer & Flutter Expert",
+        "rating": 4.9,
+        "students": 11200
+      },
+      "thumbnail": "https://placehold.co/600x400?text=Flutter&bg=02569b&color=fff",
+      "category": "mobile-development",
+      "level": "Beginner to Advanced",
+      "duration": "48 jam",
+      "lessons": 178,
+      "students": 6789,
+      "rating": 4.9,
+      "reviews": 1876,
+      "price": 349000,
+      "originalPrice": 599000,
+      "discount": 42,
+      "language": "Bahasa Indonesia",
+      "lastUpdated": "2024-01-25",
+      "certificate": true,
+      "features": [
+        "48 jam video tutorial",
+        "178 pelajaran detail",
+        "12 complete apps",
+        "State management",
+        "Firebase integration",
+        "App store deployment"
+      ],
+      "skills": ["Flutter", "Dart", "Firebase", "State Management", "UI/UX"],
+      "requirements": [
+        "Basic programming knowledge",
+        "Android Studio or VS Code",
+        "Android/iOS device or emulator"
+      ],
+      "featured": true,
+      "bestseller": true
+    },
+    {
+      "id": "c5",
+      "title": "Data Science with Python",
+      "slug": "data-science-with-python",
+      "description": "Analisis data, visualisasi, dan machine learning menggunakan Python",
+      "instructor": {
+        "name": "Dr. Rini Kusuma",
+        "avatar": "https://placehold.co/100x100?text=RK",
+        "bio": "Data Scientist & AI Researcher",
+        "rating": 4.8,
+        "students": 13500
+      },
+      "thumbnail": "https://placehold.co/600x400?text=Data+Science&bg=3776ab&color=fff",
+      "category": "data-science",
+      "level": "Intermediate",
+      "duration": "52 jam",
+      "lessons": 195,
+      "students": 7234,
+      "rating": 4.8,
+      "reviews": 2103,
+      "price": 399000,
+      "originalPrice": 699000,
+      "discount": 43,
+      "language": "Bahasa Indonesia",
+      "lastUpdated": "2024-01-18",
+      "certificate": true,
+      "features": [
+        "52 jam comprehensive content",
+        "195 hands-on lessons",
+        "15 real datasets",
+        "Jupyter notebooks included",
+        "ML algorithms implementation",
+        "Portfolio projects"
+      ],
+      "skills": ["Python", "Pandas", "NumPy", "Matplotlib", "Scikit-learn", "TensorFlow"],
+      "requirements": [
+        "Basic Python knowledge",
+        "Mathematics fundamentals",
+        "Statistics basics"
+      ],
+      "featured": true,
+      "bestseller": true
+    },
+    {
+      "id": "c6",
+      "title": "UI/UX Design Masterclass",
+      "slug": "ui-ux-design-masterclass",
+      "description": "Desain antarmuka yang indah dan pengalaman pengguna yang optimal",
+      "instructor": {
+        "name": "Dika Pratama",
+        "avatar": "https://placehold.co/100x100?text=DP",
+        "bio": "Senior UI/UX Designer di Unicorn Startup",
+        "rating": 4.7,
+        "students": 8900
+      },
+      "thumbnail": "https://placehold.co/600x400?text=UI%2FUX+Design&bg=ff6b6b&color=fff",
+      "category": "design",
+      "level": "Beginner to Advanced",
+      "duration": "38 jam",
+      "lessons": 142,
+      "students": 5432,
+      "rating": 4.7,
+      "reviews": 1654,
+      "price": 329000,
+      "originalPrice": 549000,
+      "discount": 40,
+      "language": "Bahasa Indonesia",
+      "lastUpdated": "2024-01-22",
+      "certificate": true,
+      "features": [
+        "38 jam design training",
+        "142 practical lessons",
+        "Figma & Adobe XD tutorials",
+        "Design system creation",
+        "Portfolio development",
+        "Industry case studies"
+      ],
+      "skills": ["Figma", "Adobe XD", "Prototyping", "User Research", "Design Systems"],
+      "requirements": [
+        "No prior design experience needed",
+        "Computer with internet access",
+        "Willingness to learn and practice"
+      ],
+      "featured": false,
+      "bestseller": true
+    },
+    {
+      "id": "c7",
+      "title": "Digital Marketing & SEO Strategy",
+      "slug": "digital-marketing-seo-strategy",
+      "description": "Strategi pemasaran digital lengkap untuk meningkatkan bisnis online",
+      "instructor": {
+        "name": "Lina Sari",
+        "avatar": "https://placehold.co/100x100?text=LS",
+        "bio": "Digital Marketing Consultant & SEO Expert",
+        "rating": 4.6,
+        "students": 10500
+      },
+      "thumbnail": "https://placehold.co/600x400?text=Digital+Marketing&bg=4ecdc4&color=000",
+      "category": "business",
+      "level": "Beginner to Intermediate",
+      "duration": "32 jam",
+      "lessons": 118,
+      "students": 6123,
+      "rating": 4.6,
+      "reviews": 1432,
+      "price": 259000,
+      "originalPrice": 429000,
+      "discount": 40,
+      "language": "Bahasa Indonesia",
+      "lastUpdated": "2024-01-12",
+      "certificate": true,
+      "features": [
+        "32 jam marketing content",
+        "118 actionable lessons",
+        "SEO tools & techniques",
+        "Social media strategies",
+        "Analytics & reporting",
+        "Campaign optimization"
+      ],
+      "skills": ["SEO", "Google Ads", "Social Media Marketing", "Content Marketing", "Analytics"],
+      "requirements": [
+        "Basic computer skills",
+        "Understanding of internet basics",
+        "Business mindset"
+      ],
+      "featured": false,
+      "bestseller": false
+    },
+    {
+      "id": "c8",
+      "title": "Cybersecurity Fundamentals",
+      "slug": "cybersecurity-fundamentals",
+      "description": "Pelajari dasar-dasar keamanan siber dan perlindungan sistem informasi",
+      "instructor": {
+        "name": "Ahmad Rizki",
+        "avatar": "https://placehold.co/100x100?text=AR",
+        "bio": "Cybersecurity Specialist & Ethical Hacker",
+        "rating": 4.8,
+        "students": 7800
+      },
+      "thumbnail": "https://placehold.co/600x400?text=Cybersecurity&bg=2c3e50&color=fff",
+      "category": "cybersecurity",
+      "level": "Beginner to Intermediate",
+      "duration": "36 jam",
+      "lessons": 134,
+      "students": 3456,
+      "rating": 4.8,
+      "reviews": 876,
+      "price": 379000,
+      "originalPrice": 629000,
+      "discount": 40,
+      "language": "Bahasa Indonesia",
+      "lastUpdated": "2024-01-08",
+      "certificate": true,
+      "features": [
+        "36 jam security training",
+        "134 comprehensive lessons",
+        "Hands-on lab exercises",
+        "Security tools overview",
+        "Incident response training",
+        "Industry certifications prep"
+      ],
+      "skills": ["Network Security", "Ethical Hacking", "Risk Assessment", "Incident Response"],
+      "requirements": [
+        "Basic networking knowledge",
+        "Computer fundamentals",
+        "Interest in cybersecurity"
+      ],
+      "featured": true,
+      "bestseller": false
+    }
+  ],
+  "stats": {
+    "totalCourses": 8,
+    "totalStudents": 48127,
+    "totalInstructors": 8,
+    "averageRating": 4.7,
+    "totalHours": 311
+  }
+}

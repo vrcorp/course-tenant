@@ -1,0 +1,54 @@
+# Main Website .htaccess Configuration
+# This file handles routing for the main website and tenant LMS isolation
+
+RewriteEngine On
+
+# Enable CORS for tenant LMS communication
+Header always set Access-Control-Allow-Origin "*"
+Header always set Access-Control-Allow-Methods "GET, POST, PUT, DELETE, OPTIONS"
+Header always set Access-Control-Allow-Headers "Content-Type, Authorization, X-Requested-With"
+
+# Handle preflight OPTIONS requests
+RewriteCond %{REQUEST_METHOD} OPTIONS
+RewriteRule ^(.*)$ $1 [R=200,L]
+
+# Tenant LMS Static Assets - Serve from tenant-lms/dist/
+RewriteCond %{REQUEST_URI} ^/lms/id/[^/]+/assets/
+RewriteRule ^lms/id/[^/]+/assets/(.*)$ /tenant-lms/dist/assets/$1 [L]
+
+# Tenant LMS Routing - Redirect /lms/id/* to tenant-lms dist
+# This creates complete isolation by serving tenant LMS from separate directory
+RewriteCond %{REQUEST_URI} ^/lms/id/(.+)$
+RewriteRule ^lms/id/(.*)$ /tenant-lms/dist/index.html [L]
+
+# Main website React Router - Handle all other routes
+# This ensures main website routing works independently
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_URI} !^/lms/id/
+RewriteCond %{REQUEST_URI} !^/tenant-lms/
+RewriteRule . /index.html [L]
+
+# Security headers for both main site and tenant LMS
+Header always set X-Frame-Options "SAMEORIGIN"
+Header always set X-Content-Type-Options "nosniff"
+Header always set X-XSS-Protection "1; mode=block"
+Header always set Referrer-Policy "strict-origin-when-cross-origin"
+
+# Cache control for static assets
+<FilesMatch "\.(css|js|png|jpg|jpeg|gif|ico|svg|woff|woff2|ttf|eot)$">
+    ExpiresActive On
+    ExpiresDefault "access plus 1 month"
+    Header append Cache-Control "public"
+</FilesMatch>
+
+# Prevent access to sensitive files
+<Files ~ "^\.">
+    Order allow,deny
+    Deny from all
+</Files>
+
+<Files ~ "(package\.json|yarn\.lock|\.env)$">
+    Order allow,deny
+    Deny from all
+</Files>

@@ -1,0 +1,124 @@
+[
+  {
+    "id": "user-1",
+    "name": "Ahmad Rahman",
+    "email": "ahmad.rahman@email.com",
+    "avatar": "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face",
+    "joinDate": "2023-06-15T00:00:00Z",
+    "lastLogin": "2024-01-20T15:30:00Z",
+    "role": "user",
+    "subscription": "Premium",
+    "hasLmsTenant": true,
+    "tenantSlug": "acme",
+    "lmsTenants": ["acme"],
+    "hasVideoHosting": true,
+    "coursesProgress": [
+      {
+        "courseId": "course-1",
+        "title": "React Advanced Course",
+        "progress": 75,
+        "status": "ongoing",
+        "enrolledAt": "2024-01-10T00:00:00Z",
+        "lastAccessed": "2024-01-20T10:00:00Z"
+      },
+      {
+        "courseId": "course-2", 
+        "title": "Node.js Backend Development",
+        "progress": 100,
+        "status": "completed",
+        "enrolledAt": "2023-12-01T00:00:00Z",
+        "completedAt": "2024-01-05T00:00:00Z"
+      },
+      {
+        "courseId": "course-3",
+        "title": "Database Design Fundamentals",
+        "progress": 45,
+        "status": "ongoing",
+        "enrolledAt": "2024-01-15T00:00:00Z",
+        "lastAccessed": "2024-01-19T14:30:00Z"
+      }
+    ],
+    "totalCoursesCompleted": 5,
+    "totalWatchTime": "127 hours",
+    "certificates": 3
+  },
+  {
+    "id": "user-2",
+    "name": "Siti Nurhaliza",
+    "email": "siti.nurhaliza@email.com",
+    "avatar": "https://images.unsplash.com/photo-1494790108755-2616b612b786?w=150&h=150&fit=crop&crop=face",
+    "joinDate": "2023-08-20T00:00:00Z",
+    "lastLogin": "2024-01-19T11:45:00Z",
+    "role": "user",
+    "subscription": "Basic",
+    "hasLmsTenant": false,
+    "tenantSlug": null,
+    "lmsTenants": [],
+    "hasVideoHosting": true,
+    "coursesProgress": [
+      {
+        "courseId": "course-1",
+        "title": "React Advanced Course",
+        "progress": 30,
+        "status": "ongoing",
+        "enrolledAt": "2024-01-12T00:00:00Z",
+        "lastAccessed": "2024-01-18T16:20:00Z"
+      }
+    ],
+    "totalCoursesCompleted": 2,
+    "totalWatchTime": "45 hours",
+    "certificates": 1
+  },
+  {
+    "id": "admin-1",
+    "name": "Admin Kursus",
+    "email": "admin.lms@videmyhub.com",
+    "avatar": "https://placehold.co/150x150?text=Admin",
+    "joinDate": "2022-01-10T00:00:00Z",
+    "lastLogin": "2025-01-20T09:00:00Z",
+    "role": "admin",
+    "subscription": "N/A",
+    "hasLmsTenant": false,
+    "tenantSlug": null,
+    "lmsTenants": [],
+    "hasVideoHosting": false,
+    "coursesProgress": [],
+    "totalCoursesCompleted": 0,
+    "totalWatchTime": "0 hours",
+    "certificates": 0
+  },
+  {
+    "id": "super-1",
+    "name": "Super Admin",
+    "email": "super.admin@videmyhub.com",
+    "avatar": "https://placehold.co/150x150?text=Super",
+    "joinDate": "2021-06-01T00:00:00Z",
+    "lastLogin": "2025-01-20T08:00:00Z",
+    "role": "super_admin",
+    "subscription": "N/A",
+    "hasLmsTenant": false,
+    "tenantSlug": null,
+    "hasVideoHosting": false,
+    "coursesProgress": [],
+    "totalCoursesCompleted": 0,
+    "totalWatchTime": "0 hours",
+    "certificates": 0
+  },
+  {
+    "id": "aff-1",
+    "name": "Affiliator Pro",
+    "email": "affiliator@videmyhub.com",
+    "avatar": "https://placehold.co/150x150?text=Aff",
+    "joinDate": "2023-03-12T00:00:00Z",
+    "lastLogin": "2025-01-18T14:20:00Z",
+    "role": "affiliator",
+    "subscription": "N/A",
+    "hasLmsTenant": false,
+    "tenantSlug": null,
+    "hasVideoHosting": false,
+    "coursesProgress": [],
+    "totalCoursesCompleted": 0,
+    "totalWatchTime": "0 hours",
+    "certificates": 0
+  }
+]

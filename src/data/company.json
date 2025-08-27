@@ -1,0 +1,26 @@
+{
+  "name": "StarHub",
+  "mission": "Menyederhanakan hosting video dan pembelajaran online.",
+  "tagline": "Bangun Akademi Digital Anda — cepat, aman, dan dapat diskalakan.",
+  "tone": "profesional-optimistis",
+  "palette": {
+    "primary": "#2563eb",
+    "primaryDark": "#1e40af",
+    "accent": "#6366f1"
+  },
+  "audiences": [
+    "Lembaga Pendidikan",
+    "Instruktur / Individu",
+    "Perusahaan / Komunitas"
+  ],
+  "advantages": [
+    "Keamanan kelas enterprise & isolasi tenant",
+    "Streaming ultra-cepat adaptif hingga 4K",
+    "White-label dengan custom domain/subdomain",
+    "Pembayaran terintegrasi & voucher",
+    "Analitik dan pelaporan menyeluruh",
+    "SLA tinggi & dukungan prioritas"
+  ],
+  "values": ["Kecepatan", "Keamanan", "Kemudahan"],
+  "heroImage": "https://placehold.co/1200x400?text=About+StarHub"
+}

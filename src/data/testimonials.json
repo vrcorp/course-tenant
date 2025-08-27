@@ -1,0 +1,30 @@
+[
+  {
+    "id": "t1",
+    "name": "Dr. Raka Nur",
+    "title": "Kepala Lembaga Pelatihan",
+    "avatar": "https://placehold.co/100x100?text=RN",
+    "quote": "Setiap program pelatihan memiliki ruang sendiri dengan aman. Skalanya mulus, stabil, dan dukungannya sangat responsif."
+  },
+  {
+    "id": "t2",
+    "name": "Sinta A.",
+    "title": "Instruktur Independen",
+    "avatar": "https://placehold.co/100x100?text=SA",
+    "quote": "Streaming adaptif dan unggah cepat memudahkan kelas daring. Saya fokus ke materi, sementara aspek teknis video tetap aman."
+  },
+  {
+    "id": "t3",
+    "name": "Bima R.",
+    "title": "Koordinator Komunitas",
+    "avatar": "https://placehold.co/100x100?text=BR",
+    "quote": "Pembayaran dan voucher yang terintegrasi memperlancar pengelolaan batch kelas dan promosi komunitas kami."
+  },
+  {
+    "id": "t4",
+    "name": "Nadia P.",
+    "title": "Corporate L&D Lead",
+    "avatar": "https://placehold.co/100x100?text=NP",
+    "quote": "Analitik yang rapi membantu kami memantau adopsi belajar dan dampak program, lengkap dengan laporan yang mudah dibagikan."
+  }
+]

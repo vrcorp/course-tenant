@@ -1,0 +1,23 @@
+{
+  "whatsapp": {
+    "provider": "waba",
+    "apiKey": "",
+    "senderNumber": ""
+  },
+  "contabo": {
+    "apiToken": "",
+    "region": "eu-central-1"
+  },
+  "smtp": {
+    "host": "smtp.mailtrap.io",
+    "port": 587,
+    "username": "",
+    "password": "",
+    "fromEmail": "noreply@videmyhub.com"
+  },
+  "tripay": {
+    "apiKey": "",
+    "merchantCode": "",
+    "privateKey": ""
+  }
+}

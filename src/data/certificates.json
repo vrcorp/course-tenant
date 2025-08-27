@@ -1,0 +1,4 @@
+[
+  { "id": "cf-u-1", "template": "Classic", "issuer": "VidemyHub Academy", "published": true },
+  { "id": "cf-u-2", "template": "Minimal", "issuer": "Tech School", "published": false }
+]

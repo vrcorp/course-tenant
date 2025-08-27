@@ -1,0 +1,45 @@
+[
+  {
+    "id": "starter",
+    "name": "Starter LMS",
+    "price_per_month": 19,
+    "features": [
+      "Hingga 50 siswa aktif",
+      "Maks. 5 kursus",
+      "Subdomain *.videmyhub.io",
+      "Landing page dasar",
+      "Analitik dasar"
+    ],
+    "limits": { "students": 50, "courses": 5 },
+    "domain": { "subdomain": true, "custom_domain": false }
+  },
+  {
+    "id": "pro",
+    "name": "Pro LMS",
+    "price_per_month": 49,
+    "features": [
+      "Hingga 500 siswa aktif",
+      "Maks. 50 kursus",
+      "Subdomain *.videmyhub.io",
+      "Custom domain didukung",
+      "Branding kustom",
+      "Integrasi pembayaran & voucher"
+    ],
+    "limits": { "students": 500, "courses": 50 },
+    "domain": { "subdomain": true, "custom_domain": true }
+  },
+  {
+    "id": "business",
+    "name": "Business LMS",
+    "price_per_month": 149,
+    "features": [
+      "Siswa tak terbatas",
+      "Kursus tak terbatas",
+      "Custom domain",
+      "SLA tinggi & dukungan prioritas",
+      "Analitik lanjutan & laporan kustom"
+    ],
+    "limits": { "students": -1, "courses": -1 },
+    "domain": { "subdomain": true, "custom_domain": true }
+  }
+]
