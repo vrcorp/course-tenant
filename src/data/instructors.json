@@ -1,0 +1,67 @@
+[
+  {
+    "id": "instr_1",
+    "name": "Dr. Ahmad Wijaya",
+    "email": "ahmad.wijaya@example.com",
+    "avatar": "/avatars/instructor1.jpg",
+    "specialization": "Web Development",
+    "courses": 12,
+    "students": 1250,
+    "rating": 4.8,
+    "status": "active",
+    "joinDate": "2023-01-15T00:00:00.000Z",
+    "totalEarnings": 45000000
+  },
+  {
+    "id": "instr_2",
+    "name": "Prof. Sarah Chen",
+    "email": "sarah.chen@example.com",
+    "avatar": "/avatars/instructor2.jpg",
+    "specialization": "Data Science",
+    "courses": 8,
+    "students": 890,
+    "rating": 4.9,
+    "status": "active",
+    "joinDate": "2023-03-20T00:00:00.000Z",
+    "totalEarnings": 32500000
+  },
+  {
+    "id": "instr_3",
+    "name": "Budi Santoso",
+    "email": "budi.santoso@example.com",
+    "avatar": "/avatars/instructor3.jpg",
+    "specialization": "Mobile Development",
+    "courses": 6,
+    "students": 650,
+    "rating": 4.7,
+    "status": "active",
+    "joinDate": "2023-05-10T00:00:00.000Z",
+    "totalEarnings": 28000000
+  },
+  {
+    "id": "instr_4",
+    "name": "Lisa Permata",
+    "email": "lisa.permata@example.com",
+    "avatar": "/avatars/instructor4.jpg",
+    "specialization": "UI/UX Design",
+    "courses": 10,
+    "students": 1100,
+    "rating": 4.8,
+    "status": "inactive",
+    "joinDate": "2023-02-28T00:00:00.000Z",
+    "totalEarnings": 38500000
+  },
+  {
+    "id": "instr_5",
+    "name": "Rizki Pratama",
+    "email": "rizki.pratama@example.com",
+    "avatar": "/avatars/instructor5.jpg",
+    "specialization": "Digital Marketing",
+    "courses": 15,
+    "students": 1800,
+    "rating": 4.9,
+    "status": "active",
+    "joinDate": "2022-11-12T00:00:00.000Z",
+    "totalEarnings": 52000000
+  }
+]

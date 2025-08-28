@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -25,10 +25,24 @@ import {
   Heart,
   Calendar,
   Target,
-  TrendingUp
+  TrendingUp,
+  Link as LinkIcon,
+  Facebook,
+  Twitter,
+  Linkedin,
+  MessageCircle as MessageCircleIcon,
+  Mail,
+  Copy
 } from 'lucide-react';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
 import { toast } from 'sonner';
 import { useCart } from '@/contexts/CartContext';
+import { useWishlist } from '@/contexts/WishlistContext';
 import coursesData from '@/data/courses.json';
 
 interface CourseDetailProps {}
@@ -37,24 +51,60 @@ const CourseDetail: React.FC<CourseDetailProps> = () => {
   const { courseId } = useParams<{ courseId: string }>();
   const navigate = useNavigate();
   const { addToCart } = useCart();
+  const { addToWishlist, removeFromWishlist, isInWishlist } = useWishlist();
   const [activeTab, setActiveTab] = useState('overview');
-  const [isWishlisted, setIsWishlisted] = useState(false);
   const [showPreview, setShowPreview] = useState(false);
+  const [showShareMenu, setShowShareMenu] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const [course, setCourse] = useState<any>(null);
+  const [error, setError] = useState<string | null>(null);
 
-  // Find the course from the JSON data
-  const course = coursesData.courses.find(c => c.id === courseId);
+  // Load course data
+  useEffect(() => {
+    const loadCourse = () => {
+      try {
+        setIsLoading(true);
+        const foundCourse = coursesData.courses.find((c: any) => c.id === courseId);
+        if (!foundCourse) {
+          setError('Kursus tidak ditemukan');
+        } else {
+          setCourse(foundCourse);
+        }
+      } catch (err) {
+        console.error('Error loading course:', err);
+        setError('Terjadi kesalahan saat memuat data kursus');
+      } finally {
+        setIsLoading(false);
+      }
+    };
 
-  if (!course) {
+    loadCourse();
+  }, [courseId]);
+
+  // Show loading state
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 p-6 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500 mx-auto mb-4"></div>
+          <p className="text-gray-600">Memuat data kursus...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Show error state
+  if (error) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 p-6 flex items-center justify-center">
         <Card className="max-w-md w-full">
           <CardContent className="p-8 text-center">
-            <BookOpen className="h-16 w-16 text-gray-300 mx-auto mb-4" />
+            <BookOpen className="h-16 w-16 text-red-400 mx-auto mb-4" />
             <h2 className="text-xl font-semibold text-gray-600 mb-2">
-              Kursus Tidak Ditemukan
+              Terjadi Kesalahan
             </h2>
             <p className="text-gray-500 mb-4">
-              Maaf, kursus yang Anda cari tidak dapat ditemukan.
+              {error}
             </p>
             <Link to="/courses">
               <Button>Kembali ke Katalog</Button>
@@ -64,6 +114,8 @@ const CourseDetail: React.FC<CourseDetailProps> = () => {
       </div>
     );
   }
+
+  // This check is now handled in the error state above
 
   const formatPrice = (price: number) => {
     return new Intl.NumberFormat('id-ID', {
@@ -112,37 +164,57 @@ const CourseDetail: React.FC<CourseDetailProps> = () => {
   };
 
   const handleWishlist = () => {
-    setIsWishlisted(!isWishlisted);
-    if (!isWishlisted) {
-      toast.success('Kursus ditambahkan ke wishlist!');
+    if (isInWishlist(course.id)) {
+      removeFromWishlist(course.id);
     } else {
-      toast.info('Kursus dihapus dari wishlist.');
+      const wishlistItem = {
+        id: course.id,
+        title: course.title,
+        thumbnail: course.thumbnail,
+        price: course.price,
+        originalPrice: course.originalPrice,
+        instructor: course.instructor.name,
+        duration: course.duration || 'Lifetime access',
+        level: course.level || 'All Levels',
+        category: course.category,
+        rating: course.rating,
+        studentsCount: course.studentsCount
+      };
+      addToWishlist(wishlistItem);
     }
   };
 
-  const handleShare = async () => {
-    const shareData = {
-      title: course.title,
-      text: `Lihat kursus ${course.title} oleh ${course.instructor.name}`,
-      url: window.location.href
-    };
+  const handleShare = (platform?: string) => {
+    const courseUrl = `${window.location.origin}/course/${course.id}`;
+    const shareText = `Lihat kursus menarik ini: ${course.title}`;
 
-    if (navigator.share && navigator.canShare(shareData)) {
-      try {
-        await navigator.share(shareData);
-        toast.success('Kursus berhasil dibagikan!');
-      } catch (error) {
-        // User cancelled sharing
-      }
-    } else {
-      // Fallback: copy to clipboard
-      try {
-        await navigator.clipboard.writeText(window.location.href);
-        toast.success('Link kursus berhasil disalin ke clipboard!');
-      } catch (error) {
-        toast.error('Gagal menyalin link kursus.');
-      }
+    switch (platform) {
+      case 'whatsapp':
+        window.open(`https://wa.me/?text=${encodeURIComponent(shareText + ' ' + courseUrl)}`, '_blank');
+        break;
+      case 'facebook':
+        window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(courseUrl)}&quote=${encodeURIComponent(shareText)}`, '_blank');
+        break;
+      case 'twitter':
+        window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(courseUrl)}`, '_blank');
+        break;
+      case 'linkedin':
+        window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(courseUrl)}`, '_blank');
+        break;
+      case 'telegram':
+        window.open(`https://t.me/share/url?url=${encodeURIComponent(courseUrl)}&text=${encodeURIComponent(shareText)}`, '_blank');
+        break;
+      case 'email':
+        window.open(`mailto:?subject=${encodeURIComponent(course.title)}&body=${encodeURIComponent(shareText + '\n\n' + courseUrl)}`, '_blank');
+        break;
+      case 'copy':
+      default:
+        navigator.clipboard.writeText(courseUrl);
+        toast.success('Link berhasil disalin ke clipboard!');
+        break;
     }
+    
+    setShowShareMenu(false);
   };
 
   const handlePreview = () => {
@@ -307,18 +379,51 @@ const CourseDetail: React.FC<CourseDetailProps> = () => {
                             className="flex-1"
                             onClick={handleWishlist}
                           >
-                            <Heart className={`h-4 w-4 mr-2 ${isWishlisted ? 'fill-red-500 text-red-500' : ''}`} />
+                            <Heart className={`h-4 w-4 mr-2 ${isInWishlist(course.id) ? 'fill-red-500 text-red-500' : ''}`} />
                             Wishlist
                           </Button>
-                          <Button 
-                            variant="ghost" 
-                            size="sm" 
-                            className="flex-1"
-                            onClick={handleShare}
-                          >
-                            <Share2 className="h-4 w-4 mr-2" />
-                            Bagikan
-                          </Button>
+                          <DropdownMenu open={showShareMenu} onOpenChange={setShowShareMenu}>
+                            <DropdownMenuTrigger asChild>
+                              <Button 
+                                variant="ghost" 
+                                size="sm" 
+                                className="flex-1"
+                              >
+                                <Share2 className="h-4 w-4 mr-2" />
+                                Bagikan
+                              </Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent className="w-56" align="end">
+                              <DropdownMenuItem onClick={() => handleShare('copy')}>
+                                <Copy className="mr-2 h-4 w-4" />
+                                <span>Salin Link</span>
+                              </DropdownMenuItem>
+                              <DropdownMenuItem onClick={() => handleShare('whatsapp')}>
+                                <MessageCircleIcon className="mr-2 h-4 w-4 text-green-600" />
+                                <span>WhatsApp</span>
+                              </DropdownMenuItem>
+                              <DropdownMenuItem onClick={() => handleShare('facebook')}>
+                                <Facebook className="mr-2 h-4 w-4 text-blue-600" />
+                                <span>Facebook</span>
+                              </DropdownMenuItem>
+                              <DropdownMenuItem onClick={() => handleShare('twitter')}>
+                                <Twitter className="mr-2 h-4 w-4 text-sky-500" />
+                                <span>Twitter</span>
+                              </DropdownMenuItem>
+                              <DropdownMenuItem onClick={() => handleShare('linkedin')}>
+                                <Linkedin className="mr-2 h-4 w-4 text-blue-700" />
+                                <span>LinkedIn</span>
+                              </DropdownMenuItem>
+                              <DropdownMenuItem onClick={() => handleShare('telegram')}>
+                                <MessageCircle className="mr-2 h-4 w-4 text-blue-400" />
+                                <span>Telegram</span>
+                              </DropdownMenuItem>
+                              <DropdownMenuItem onClick={() => handleShare('email')}>
+                                <Mail className="mr-2 h-4 w-4 text-gray-600" />
+                                <span>Email</span>
+                              </DropdownMenuItem>
+                            </DropdownMenuContent>
+                          </DropdownMenu>
                         </div>
                       </div>
 

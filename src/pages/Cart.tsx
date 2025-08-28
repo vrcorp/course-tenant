@@ -1,14 +1,34 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
-import { Trash2, ShoppingCart, ArrowRight, ArrowLeft, Clock, User } from 'lucide-react';
+import { Link, useNavigate } from 'react-router-dom';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Separator } from '@/components/ui/separator';
+import { 
+  ShoppingCart, 
+  Star, 
+  Clock, 
+  Users, 
+  Trash2,
+  Plus,
+  Minus,
+  BookOpen,
+  CreditCard,
+  User,
+  Info,
+  ArrowLeft,
+  ArrowRight
+} from 'lucide-react';
 import { useCart } from '@/contexts/CartContext';
+import { getOrCreateGuestId } from '@/lib/guestId';
+import { getRole } from '@/lib/auth';
+import { toast } from 'sonner';
 
 export default function Cart() {
   const { items, removeFromCart, getTotalPrice, getTotalItems } = useCart();
+  const currentRole = getRole();
+  const guestId = getOrCreateGuestId();
 
   const formatPrice = (price: number) => {
     return new Intl.NumberFormat('id-ID', {
@@ -77,27 +97,34 @@ export default function Cart() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 p-6">
       <div className="max-w-6xl mx-auto">
+        {/* Guest Info Alert */}
+        {currentRole === 'guest' && items.length > 0 && (
+          <Alert className="mb-6 border-blue-200 bg-blue-50">
+            <Info className="h-4 w-4 text-blue-600" />
+            <AlertDescription className="text-blue-800">
+              <strong>Belanja sebagai Guest:</strong> Keranjang Anda akan tersimpan dan dapat dipindahkan ke akun saat login nanti.
+              <Link to="/login" className="ml-2 underline hover:no-underline">
+                Login sekarang
+              </Link>
+            </AlertDescription>
+          </Alert>
+        )}
+
         {/* Header */}
-        <div className="mb-8">
-          <Link to="/courses">
-            <Button variant="ghost" className="mb-4">
-              <ArrowLeft className="h-4 w-4 mr-2" />
-              Kembali ke Katalog
-            </Button>
-          </Link>
-          <div className="flex items-center justify-between">
-            <div>
-              <h1 className="text-3xl font-bold text-gray-900">Keranjang Belanja</h1>
-              <p className="text-gray-600 mt-2">
-                {getTotalItems()} kursus dalam keranjang Anda
-              </p>
-            </div>
-            {savings > 0 && (
-              <div className="text-right">
-                <div className="text-sm text-gray-600">Total Hemat</div>
-                <div className="text-2xl font-bold text-green-600">
-                  {formatPrice(savings)}
-                </div>
+        <div className="flex items-center justify-between mb-8">
+          <div>
+            <h1 className="text-3xl font-bold text-gray-900 mb-2">
+              Keranjang Belanja
+            </h1>
+            <p className="text-gray-600">
+              {items.length} kursus dalam keranjang
+            </p>
+            {currentRole === 'guest' && (
+              <div className="flex items-center gap-2 mt-2">
+                <User className="h-4 w-4 text-blue-500" />
+                <span className="text-sm text-blue-600 font-medium">
+                  Guest ID: {guestId.split('_')[1]?.substring(0, 8)}...
+                </span>
               </div>
             )}
           </div>

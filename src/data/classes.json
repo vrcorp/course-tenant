@@ -1,0 +1,16 @@
+[
+  {
+    "id": "cls-1",
+    "title": "React Live Class: State Management",
+    "date": "2025-09-05",
+    "students": 25,
+    "status": "scheduled"
+  },
+  {
+    "id": "cls-2",
+    "title": "TypeScript Workshop",
+    "date": "2025-09-10",
+    "students": 30,
+    "status": "scheduled"
+  }
+]

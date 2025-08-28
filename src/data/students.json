@@ -1,0 +1,200 @@
+[
+  {
+    "id": "student-001",
+    "name": "Ahmad Rahman",
+    "email": "ahmad.rahman@email.com",
+    "avatar": "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face",
+    "joinDate": "2023-06-15T00:00:00Z",
+    "lastLogin": "2024-01-20T15:30:00Z",
+    "role": "user",
+    "hasLmsTenant": false,
+    "tenantSlug": null,
+    "coursesProgress": [
+      {
+        "courseId": "course-1",
+        "courseTitle": "React Fundamentals",
+        "progress": 85,
+        "completedLessons": 17,
+        "totalLessons": 20,
+        "lastAccessed": "2024-01-20T10:15:00Z",
+        "purchaseDate": "2023-06-20T00:00:00Z",
+        "price": 299000
+      },
+      {
+        "courseId": "course-2",
+        "courseTitle": "Advanced JavaScript",
+        "progress": 60,
+        "completedLessons": 12,
+        "totalLessons": 20,
+        "lastAccessed": "2024-01-18T14:30:00Z",
+        "purchaseDate": "2023-07-10T00:00:00Z",
+        "price": 399000
+      }
+    ]
+  },
+  {
+    "id": "student-002",
+    "name": "Siti Nurhaliza",
+    "email": "siti.nurhaliza@email.com",
+    "avatar": "https://images.unsplash.com/photo-1494790108755-2616b612b786?w=150&h=150&fit=crop&crop=face",
+    "joinDate": "2023-08-22T00:00:00Z",
+    "lastLogin": "2024-01-19T09:45:00Z",
+    "role": "user",
+    "hasLmsTenant": false,
+    "tenantSlug": null,
+    "coursesProgress": [
+      {
+        "courseId": "course-3",
+        "courseTitle": "UI/UX Design Principles",
+        "progress": 100,
+        "completedLessons": 15,
+        "totalLessons": 15,
+        "lastAccessed": "2024-01-15T16:20:00Z",
+        "purchaseDate": "2023-08-25T00:00:00Z",
+        "price": 499000
+      },
+      {
+        "courseId": "course-6",
+        "courseTitle": "Figma for Beginners",
+        "progress": 45,
+        "completedLessons": 9,
+        "totalLessons": 20,
+        "lastAccessed": "2024-01-18T14:30:00Z",
+        "purchaseDate": "2023-09-15T00:00:00Z",
+        "price": 199000
+      }
+    ]
+  },
+  {
+    "id": "student-003",
+    "name": "Budi Santoso",
+    "email": "budi.santoso@email.com",
+    "avatar": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face",
+    "joinDate": "2023-11-10T00:00:00Z",
+    "lastLogin": "2024-01-21T11:20:00Z",
+    "role": "user",
+    "hasLmsTenant": false,
+    "tenantSlug": null,
+    "coursesProgress": [
+      {
+        "courseId": "course-1",
+        "courseTitle": "React Fundamentals",
+        "progress": 45,
+        "completedLessons": 9,
+        "totalLessons": 20,
+        "lastAccessed": "2024-01-21T08:30:00Z",
+        "purchaseDate": "2023-11-15T00:00:00Z",
+        "price": 299000
+      },
+      {
+        "courseId": "course-4",
+        "courseTitle": "Node.js Backend Development",
+        "progress": 30,
+        "completedLessons": 6,
+        "totalLessons": 20,
+        "lastAccessed": "2024-01-19T13:45:00Z",
+        "purchaseDate": "2023-12-01T00:00:00Z",
+        "price": 599000
+      },
+      {
+        "courseId": "course-5",
+        "courseTitle": "Database Design",
+        "progress": 75,
+        "completedLessons": 15,
+        "totalLessons": 20,
+        "lastAccessed": "2024-01-20T17:10:00Z",
+        "purchaseDate": "2023-12-20T00:00:00Z",
+        "price": 449000
+      }
+    ]
+  },
+  {
+    "id": "student-004",
+    "name": "Dewi Lestari",
+    "email": "dewi.lestari@email.com",
+    "avatar": "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150&h=150&fit=crop&crop=face",
+    "joinDate": "2023-09-05T00:00:00Z",
+    "lastLogin": "2024-01-22T08:15:00Z",
+    "role": "user",
+    "hasLmsTenant": false,
+    "tenantSlug": null,
+    "coursesProgress": [
+      {
+        "courseId": "course-7",
+        "courseTitle": "Digital Marketing Fundamentals",
+        "progress": 90,
+        "completedLessons": 18,
+        "totalLessons": 20,
+        "lastAccessed": "2024-01-22T07:30:00Z",
+        "purchaseDate": "2023-09-10T00:00:00Z",
+        "price": 349000
+      }
+    ]
+  },
+  {
+    "id": "student-005",
+    "name": "Rizki Pratama",
+    "email": "rizki.pratama@email.com",
+    "avatar": "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150&h=150&fit=crop&crop=face",
+    "joinDate": "2023-12-01T00:00:00Z",
+    "lastLogin": "2024-01-21T19:45:00Z",
+    "role": "user",
+    "hasLmsTenant": false,
+    "tenantSlug": null,
+    "coursesProgress": [
+      {
+        "courseId": "course-2",
+        "courseTitle": "Advanced JavaScript",
+        "progress": 25,
+        "completedLessons": 5,
+        "totalLessons": 20,
+        "lastAccessed": "2024-01-21T18:20:00Z",
+        "purchaseDate": "2023-12-05T00:00:00Z",
+        "price": 399000
+      },
+      {
+        "courseId": "course-8",
+        "courseTitle": "Python for Data Science",
+        "progress": 55,
+        "completedLessons": 11,
+        "totalLessons": 20,
+        "lastAccessed": "2024-01-20T16:10:00Z",
+        "purchaseDate": "2023-12-15T00:00:00Z",
+        "price": 549000
+      }
+    ]
+  },
+  {
+    "id": "student-006",
+    "name": "Maya Sari",
+    "email": "maya.sari@email.com",
+    "avatar": "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=150&h=150&fit=crop&crop=face",
+    "joinDate": "2023-07-18T00:00:00Z",
+    "lastLogin": "2024-01-19T12:30:00Z",
+    "role": "user",
+    "hasLmsTenant": false,
+    "tenantSlug": null,
+    "coursesProgress": [
+      {
+        "courseId": "course-3",
+        "courseTitle": "UI/UX Design Principles",
+        "progress": 70,
+        "completedLessons": 14,
+        "totalLessons": 20,
+        "lastAccessed": "2024-01-19T11:45:00Z",
+        "purchaseDate": "2023-07-25T00:00:00Z",
+        "price": 499000
+      },
+      {
+        "courseId": "course-9",
+        "courseTitle": "Adobe Photoshop Mastery",
+        "progress": 100,
+        "completedLessons": 25,
+        "totalLessons": 25,
+        "lastAccessed": "2024-01-15T14:20:00Z",
+        "purchaseDate": "2023-08-10T00:00:00Z",
+        "price": 399000
+      }
+    ]
+  }
+]

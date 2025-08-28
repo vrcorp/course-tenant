@@ -13,6 +13,7 @@ import Programs from "./pages/Programs";
 import Analytics from "./pages/Analytics";
 import Orders from "./pages/Orders";
 import Cart from "./pages/Cart";
+import Wishlist from "./pages/Wishlist";
 import Checkout from "./pages/Checkout";
 import Profile from "./pages/Profile";
 import MyCourses from "./pages/MyCourses";
@@ -57,22 +58,33 @@ import AffiliatorCommissions from "./pages/affiliatr/Commissions";
 import AffiliatorPayouts from "./pages/affiliatr/Payouts";
 import AffiliatorAssets from "./pages/affiliatr/Assets";
 // Admin pages under /admin/baruisi (role-based wrappers)
-import AdminTenants from "./pages/admin/baruisi/Tenants";
-import AdminApiKeys from "./pages/admin/baruisi/ApiKeys";
-import AdminAuditLogs from "./pages/admin/baruisi/AuditLogs";
-import AdminConfig from "./pages/admin/baruisi/Config";
+// Removed: AdminTenants, AdminApiKeys, AdminAuditLogs, AdminConfig - not needed for core user roles
 import AdminDashboard from "./pages/admin/baruisi/Dashboard";
+import AdminUsers from "./pages/admin/baruisi/users/Users";
+import AdminInstructors from "./pages/admin/baruisi/instructors/Instructors";
+import AdminAffiliators from "./pages/admin/baruisi/affiliators/Affiliators";
+
+import AdminCourses from "./pages/tenant/admin/AdminCourses";
+import AdminQuizzes from "./pages/admin/baruisi/quizzes/Quizzes";
+import AdminClasses from "./pages/admin/baruisi/classes/Classes";
+import AdminCertificates from "./pages/admin/baruisi/certificates/Certificates";
+import AdminAssignments from "./pages/admin/baruisi/assignments/Assignments";
+
 
 import AdminVouchers from "./pages/admin/baruisi/Vouchers";
 import AdminOrders from "./pages/admin/baruisi/Orders";
-import AdminUsers from "./pages/admin/baruisi/Users";
+
+
+
 import AdminSiteSettings from "./pages/admin/baruisi/SiteSettings";
 import AdminApiSettings from "./pages/admin/baruisi/ApiSettings";
 import AdminReports from "./pages/admin/baruisi/Reports";
-import AdminAffiliators from "./pages/admin/baruisi/Affiliators";
 import AdminAffiliatorPayouts from "./pages/admin/baruisi/AffiliatorPayouts";
 import AdminAffiliatorAnalytics from "./pages/admin/baruisi/AffiliatorAnalytics";
+
 import ProtectedRoute from "./routes/ProtectedRoute";
+import AdminRoutes from "./routes/AdminRoutes";
+import AffiliatorRoutes from "./routes/AffiliatorRoutes";
 
 
 // Tenant Admin pages (for LMS tenant owners)
@@ -90,21 +102,159 @@ import TenantAdminRoute from "./routes/TenantAdminRoute";
 import AffiliatorReports from "./pages/affiliatr/Reports";
 import AffiliatorAnalytics from "./pages/affiliatr/Analytics";
 import { TenantAuthProvider } from "./contexts/TenantAuthContext";
+import { CartProvider } from "./contexts/CartContext";
+import { WishlistProvider } from "./contexts/WishlistContext";
+import { useGuestTransfer } from "./hooks/useGuestTransfer";
 import TenantLayout from "./components/tenant/TenantLayout";
 
 const queryClient = new QueryClient();
+
+// Component to handle guest transfer logic
+const AppWithTransfer = () => {
+  useGuestTransfer();
+  return (
+    <Layout>
+      <Routes>
+        <Route path="/" element={<Landing />} />
+        <Route path="/courses" element={<Courses />} />
+        <Route path="/course/:courseId" element={<CourseDetail />} />
+        <Route path="/wishlist" element={<Wishlist />} />
+        <Route
+          path="/dashboard"
+          element={<ProtectedRoute allow={["user"]} element={<Dashboard />} />}
+        />
+
+        <Route path="/programs" element={<Programs />} />
+        <Route path="/live-classes" element={<LiveClasses />} />
+        <Route path="/quizzes" element={<Quizzes />} />
+        <Route path="/assignments" element={<Assignments />} />
+        <Route path="/certificates" element={<Certificates />} />
+        <Route path="/forum" element={<Forum />} />
+        <Route path="/analytics" element={<Analytics />} />
+        <Route path="/about" element={<About />} />
+        <Route path="/contact" element={<Contact />} />
+        <Route path="/privacy" element={<Privacy />} />
+        <Route path="/terms" element={<Terms />} />
+        <Route path="/faq" element={<FAQ />} />
+        <Route path="/support" element={<Support />} />
+        <Route path="/documentation" element={<Documentation />} />
+        <Route path="/affiliate" element={<Affiliate />} />
+        <Route path="/affiliate/faq" element={<AffiliateFAQ />} />
+        <Route path="/affiliate/register" element={<AffiliateRegister />} />
+
+        {/* Tenant Routes - Public Authentication Pages (must come before wildcard) */}
+        <Route path="/t/:tenantSlug/login" element={<TenantLogin />} />
+        <Route path="/t/:tenantSlug/register" element={<TenantRegister />} />
+        
+        {/* Tenant Isolated Routes with TenantAuthProvider */}
+        <Route path="/t/:tenantSlug" element={
+          <TenantAuthProvider>
+            <TenantLayout>
+              <TenantLanding />
+            </TenantLayout>
+          </TenantAuthProvider>
+        } />
+        
+        <Route path="/t/:tenantSlug/packages" element={
+          <TenantAuthProvider>
+            <TenantLayout>
+              <TenantPackages />
+            </TenantLayout>
+          </TenantAuthProvider>
+        } />
+        
+        <Route path="/t/:tenantSlug/cart" element={
+          <TenantAuthProvider>
+            <TenantLayout>
+              <TenantCart />
+            </TenantLayout>
+          </TenantAuthProvider>
+        } />
+        
+        <Route path="/t/:tenantSlug/orders" element={
+          <TenantAuthProvider>
+            <TenantLayout>
+              <TenantOrders />
+            </TenantLayout>
+          </TenantAuthProvider>
+        } />
+        
+        <Route path="/t/:tenantSlug/profile" element={
+          <TenantAuthProvider>
+            <TenantLayout>
+              <TenantProfile />
+            </TenantLayout>
+          </TenantAuthProvider>
+        } />
+
+        {/* Protected Routes */}
+        <Route
+          path="/orders"
+          element={<ProtectedRoute allow={["user"]} element={<Orders />} />}
+        />
+        <Route
+          path="/cart"
+          element={<Cart />}
+        />
+        <Route
+          path="/checkout"
+          element={<Checkout />}
+        />
+        <Route
+          path="/profile"
+          element={<ProtectedRoute allow={["user"]} element={<Profile />} />}
+        />
+        <Route
+          path="/my-courses"
+          element={<ProtectedRoute allow={["user"]} element={<MyCourses />} />}
+        />
+        <Route
+          path="/my-orders"
+          element={<ProtectedRoute allow={["user"]} element={<MyOrders />} />}
+        />
+        <Route
+          path="/settings"
+          element={<ProtectedRoute allow={["user"]} element={<Settings />} />}
+        />
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+
+        {/* Admin Routes */}
+        <Route
+          path="/admin/*"
+          element={<ProtectedRoute allow={["admin"]} element={<AdminRoutes />} />}
+        />
+
+        {/* Affiliator Routes */}
+        <Route
+          path="/affiliator/*"
+          element={<ProtectedRoute allow={["affiliator"]} element={<AffiliatorRoutes />} />}
+        />
+
+        {/* Catch all route */}
+        <Route path="*" element={<NotFound />} />
+      </Routes>
+    </Layout>
+  );
+};
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
       <Toaster />
       <Sonner />
-      <BrowserRouter>
+      <CartProvider>
+        <WishlistProvider>
+        <BrowserRouter>
+        <TenantAuthProvider>
         <Layout>
           <Routes>
             <Route path="/" element={<Landing />} />
             <Route path="/courses" element={<Courses />} />
             <Route path="/course/:courseId" element={<CourseDetail />} />
+            <Route path="/cart" element={<Cart />} />
+            <Route path="/checkout" element={<Checkout />} />
+            <Route path="/wishlist" element={<Wishlist />} />
             <Route
               path="/dashboard"
               element={<ProtectedRoute allow={["user"]} element={<Dashboard />} />}
@@ -270,27 +420,27 @@ const App = () => (
             <Route path="/affiliatr/assets" element={<ProtectedRoute allow={["affiliator"]} element={<AffiliatorAssets />} />} />
             <Route path="/affiliatr/reports" element={<ProtectedRoute allow={["affiliator"]} element={<AffiliatorReports />} />} />
             <Route path="/affiliatr/analytics" element={<ProtectedRoute allow={["affiliator"]} element={<AffiliatorAnalytics />} />} />
-            {/* Admin routes under /admin */}
-            <Route path="/admin/tenants" element={<ProtectedRoute allow={["admin", "super_admin"]} element={<AdminTenants />} />} />
-            <Route path="/admin/api-keys" element={<ProtectedRoute allow={["admin", "super_admin"]} element={<AdminApiKeys />} />} />
-            <Route path="/admin/audit-logs" element={<ProtectedRoute allow={["admin", "super_admin"]} element={<AdminAuditLogs />} />} />
-            <Route path="/admin/config" element={<ProtectedRoute allow={["admin", "super_admin"]} element={<AdminConfig />} />} />
+            {/* Admin routes under /admin - Core user roles only */}
             <Route path="/admin/dashboard" element={<ProtectedRoute allow={["admin", "super_admin"]} element={<AdminDashboard />} />} />
+            
+            {/* Core user management routes */}
+            <Route path="/admin/users" element={<ProtectedRoute allow={["admin", "super_admin"]} element={<AdminUsers />} />} />
+            <Route path="/admin/affiliators" element={<ProtectedRoute allow={["admin", "super_admin"]} element={<AdminAffiliators />} />} />
+            <Route path="/admin/instructors" element={<ProtectedRoute allow={["admin", "super_admin"]} element={<AdminInstructors />} />} />
 
+
+            {/* Core content routes */}
+            <Route path="/admin/courses" element={<ProtectedRoute allow={["admin", "super_admin"]} element={<AdminCourses />} />} />
+            <Route path="/admin/quizzes" element={<ProtectedRoute allow={["admin", "super_admin"]} element={<AdminQuizzes />} />} />
+            <Route path="/admin/classes" element={<ProtectedRoute allow={["admin", "super_admin"]} element={<AdminClasses />} />} />
+            <Route path="/admin/certificates" element={<ProtectedRoute allow={["admin", "super_admin"]} element={<AdminCertificates />} />} />
+            <Route path="/admin/assignments" element={<ProtectedRoute allow={["admin", "super_admin"]} element={<AdminAssignments />} />} />
+            
+            
+            {/* Commerce routes */}
             <Route path="/admin/vouchers" element={<ProtectedRoute allow={["admin", "super_admin"]} element={<AdminVouchers />} />} />
             <Route path="/admin/orders" element={<ProtectedRoute allow={["admin", "super_admin"]} element={<AdminOrders />} />} />
-            <Route path="/admin/users" element={<ProtectedRoute allow={["admin", "super_admin"]} element={<AdminUsers />} />} />
-            <Route path="/admin/site-settings" element={<ProtectedRoute allow={["admin", "super_admin"]} element={<AdminSiteSettings />} />} />
-            <Route path="/admin/reports" element={<ProtectedRoute allow={["super_admin"]} element={<AdminReports />} />} />
-            <Route path="/admin/affiliators/affiliators" element={<ProtectedRoute allow={["super_admin"]} element={<AdminAffiliators />} />} />
-            <Route path="/admin/affiliators/payouts" element={<ProtectedRoute allow={["super_admin"]} element={<AdminAffiliatorPayouts />} />} />
-            <Route path="/admin/affiliators/analytics" element={<ProtectedRoute allow={["super_admin"]} element={<AdminAffiliatorAnalytics />} />} />
-            <Route path="/admin/api-settings" element={<ProtectedRoute allow={["admin", "super_admin"]} element={<AdminApiSettings />} />} />
-            {/* Tenant Admin (role: user with LMS tenant) */}
-            <Route path="/tenant-admin" element={<ProtectedRoute allow={["user"]} element={<TenantAdminRoute element={<TenantAdminOverview />} />} />} />
-            <Route path="/tenant-admin/overview" element={<ProtectedRoute allow={["user"]} element={<TenantAdminRoute element={<TenantAdminOverview />} />} />} />
-            <Route path="/tenant-admin/courses" element={<ProtectedRoute allow={["user"]} element={<TenantAdminRoute element={<TenantAdminCourses />} />} />} />
-            <Route path="/tenant-admin/students" element={<ProtectedRoute allow={["user"]} element={<TenantAdminRoute element={<TenantAdminStudents />} />} />} />
+
             <Route path="/tenant-admin/instructors" element={<ProtectedRoute allow={["user"]} element={<TenantAdminRoute element={<TenantAdminInstructors />} />} />} />
             <Route path="/tenant-admin/classes" element={<ProtectedRoute allow={["user"]} element={<TenantAdminRoute element={<TenantAdminClasses />} />} />} />
             <Route path="/tenant-admin/quizzes" element={<ProtectedRoute allow={["user"]} element={<TenantAdminRoute element={<TenantAdminQuizzes />} />} />} />
@@ -301,7 +451,10 @@ const App = () => (
             <Route path="*" element={<NotFound />} />
           </Routes>
         </Layout>
-      </BrowserRouter>
+        </TenantAuthProvider>
+        </BrowserRouter>
+        </WishlistProvider>
+      </CartProvider>
     </TooltipProvider>
   </QueryClientProvider>
 );

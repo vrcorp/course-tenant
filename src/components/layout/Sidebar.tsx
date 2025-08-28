@@ -180,8 +180,9 @@ export function Sidebar() {
           title: "Management",
           icon: Shield,
           items: [
-            { title: "Tenants", href: "/admin/tenants" },
-            { title: "Users", href: "/admin/users" },
+            { title: "Siswa/Users", href: "/admin/users" },
+            { title: "Affiliator", href: "/admin/affiliators" },
+            { title: "Instruktur", href: "/admin/instructors" },
           ],
         });
         // Affiliator management group
@@ -192,6 +193,18 @@ export function Sidebar() {
             { title: "Manage Affiliators", href: "/admin/affiliators/affiliators" },
             { title: "Manage Payouts", href: "/admin/affiliators/payouts" },
             { title: "Analytics", href: "/admin/affiliators/analytics" },
+          ],
+        });
+        // Content group (courses, quizzes, etc.)
+        out.push({
+          title: "Content",
+          icon: BookOpen,
+          items: [
+            { title: "Courses", href: "/admin/courses" },
+            { title: "Quizzes", href: "/admin/quizzes" },
+            { title: "Classes", href: "/admin/classes" },
+            { title: "Certificates", href: "/admin/certificates" },
+            { title: "Assignments", href: "/admin/assignments" },
           ],
         });
         // Commerce group
@@ -233,8 +246,21 @@ export function Sidebar() {
         title: "Management",
         icon: Shield,
         items: [
-          { title: "Tenants", href: "/admin/tenants" },
-          { title: "Users", href: "/admin/users" },
+          { title: "Siswa/Users", href: "/admin/users" },
+          { title: "Affiliator", href: "/admin/affiliators" },
+          { title: "Instruktur", href: "/admin/instructors" },
+        ],
+      });
+      // Content group (courses, quizzes, etc.)
+      out.push({
+        title: "Content",
+        icon: BookOpen,
+        items: [
+          { title: "Courses", href: "/admin/courses" },
+          { title: "Quizzes", href: "/admin/quizzes" },
+          { title: "Classes", href: "/admin/classes" },
+          { title: "Certificates", href: "/admin/certificates" },
+          { title: "Assignments", href: "/admin/assignments" },
         ],
       });
       out.push({

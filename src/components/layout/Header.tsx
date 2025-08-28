@@ -1,4 +1,4 @@
-import { Bell } from "lucide-react";
+import { Bell, ShoppingCart, Heart } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -13,11 +13,15 @@ import { Link, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { clearRole, getRole, Role } from "@/lib/auth";
 import RoleSwitcher from "@/components/dev/RoleSwitcher";
+import { useCart } from "@/contexts/CartContext";
+import { useWishlist } from "@/contexts/WishlistContext";
 import company from "@/data/company.json";
 
 export function Header() {
   const navigate = useNavigate();
   const [role, setRole] = useState<Role>(getRole());
+  const { getTotalItems: getCartItems } = useCart();
+  const { getTotalItems: getWishlistItems } = useWishlist();
 
   useEffect(() => {
     const onStorage = () => setRole(getRole());
@@ -42,6 +46,30 @@ export function Header() {
         {/* Brand identity (links to home) */}
         <Link to="/" className="font-extrabold tracking-tight text-lg md:text-xl hover:text-primary">
           {company.name}
+        </Link>
+      </div>
+
+      {/* Cart and Wishlist */}
+      <div className="flex items-center gap-3 mr-4">
+        <Link to="/wishlist" className="relative">
+          <Button variant="ghost" size="sm" className="relative">
+            <Heart className="h-5 w-5" />
+            {getWishlistItems() > 0 && (
+              <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+                {getWishlistItems()}
+              </span>
+            )}
+          </Button>
+        </Link>
+        <Link to="/cart" className="relative">
+          <Button variant="ghost" size="sm" className="relative">
+            <ShoppingCart className="h-5 w-5" />
+            {getCartItems() > 0 && (
+              <span className="absolute -top-1 -right-1 bg-blue-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+                {getCartItems()}
+              </span>
+            )}
+          </Button>
         </Link>
       </div>
 

@@ -1,0 +1,67 @@
+[
+  {
+    "id": "aff_20250101_abc123",
+    "name": "Budi Santoso",
+    "email": "budi@example.com",
+    "phone": "+62 813-1234-5678",
+    "socialMedia": {
+      "instagram": "@budisanto",
+      "youtube": "Budi Santoso",
+      "tiktok": "@budisanto"
+    },
+    "channel": "Tech Review",
+    "audience": "100K subscribers on YouTube",
+    "role": "affiliator",
+    "createdAt": "2024-12-15T08:30:00.000Z",
+    "lastLogin": "2025-08-27T14:10:00.000Z",
+    "affiliatorStatus": "active",
+    "commissionRate": 20,
+    "totalEarnings": 15000000,
+    "totalPayouts": 10000000,
+    "totalReferrals": 250,
+    "notes": "Top tech reviewer."
+  },
+  {
+    "id": "aff_20250202_def456",
+    "name": "Siti Aisyah",
+    "email": "siti@example.com",
+    "phone": "+62 812-9876-5432",
+    "socialMedia": {
+      "instagram": "@sitiaisyah",
+      "youtube": "Siti Daily",
+      "tiktok": "@siti_daily"
+    },
+    "channel": "Lifestyle Vlog",
+    "audience": "200K followers on Instagram",
+    "role": "affiliator",
+    "createdAt": "2025-01-10T10:45:00.000Z",
+    "lastLogin": "2025-08-26T09:00:00.000Z",
+    "affiliatorStatus": "pending",
+    "commissionRate": 15,
+    "totalEarnings": 5000000,
+    "totalPayouts": 2000000,
+    "totalReferrals": 80,
+    "notes": ""
+  },
+  {
+    "id": "aff_20250303_ghi789",
+    "name": "Ahmad Fauzi",
+    "email": "ahmad@example.com",
+    "socialMedia": {
+      "website": "www.ahmadfauzi.com",
+      "instagram": "@ahmadfauzi",
+      "youtube": "Fauzi Gaming"
+    },
+    "channel": "Gaming",
+    "audience": "150K subscribers on YouTube",
+    "role": "affiliator",
+    "createdAt": "2024-11-05T13:20:00.000Z",
+    "lastLogin": "2025-08-25T20:00:00.000Z",
+    "affiliatorStatus": "suspended",
+    "commissionRate": 25,
+    "totalEarnings": 8000000,
+    "totalPayouts": 6000000,
+    "totalReferrals": 120,
+    "notes": "Suspended due to policy violation"
+  }
+]
