@@ -1,0 +1,89 @@
+{
+  "slides": [
+    {
+      "id": "slide-1",
+      "title": "Revolusi Pembelajaran Digital",
+      "subtitle": "Masa Depan Pendidikan Ada di Genggaman Anda",
+      "description": "Bergabunglah dengan revolusi pembelajaran digital dan kembangkan skill masa depan dengan teknologi terdepan",
+      "image": "https://placehold.co/600x400?text=Digital+Learning&bg=3b82f6&color=fff",
+      "ctaText": "Mulai Revolusi",
+      "ctaLink": "/courses",
+      "secondaryCtaText": "Pelajari Lebih Lanjut",
+      "secondaryCtaLink": "/about",
+      "badge": "🚀 Teknologi Terdepan",
+      "stats": {
+        "users": "50K+",
+        "courses": "200+",
+        "satisfaction": "98%"
+      }
+    },
+    {
+      "id": "slide-2",
+      "title": "Kursus Interaktif & Engaging",
+      "subtitle": "Belajar Sambil Praktik Langsung",
+      "description": "Nikmati pengalaman belajar yang interaktif dengan project nyata, quiz menarik, dan feedback real-time dari mentor",
+      "image": "https://placehold.co/600x400?text=Interactive+Course&bg=10b981&color=fff",
+      "ctaText": "Coba Sekarang",
+      "ctaLink": "/demo",
+      "secondaryCtaText": "Lihat Preview",
+      "secondaryCtaLink": "/preview",
+      "badge": "🎯 100% Praktis",
+      "stats": {
+        "projects": "500+",
+        "mentors": "100+",
+        "completion": "95%"
+      }
+    },
+    {
+      "id": "slide-3",
+      "title": "Komunitas Global Learners",
+      "subtitle": "Belajar Bersama Jutaan Pelajar Dunia",
+      "description": "Terhubung dengan komunitas global, sharing knowledge, dan bangun network profesional yang kuat",
+      "image": "https://placehold.co/600x400?text=Global+Community&bg=8b5cf6&color=fff",
+      "ctaText": "Gabung Komunitas",
+      "ctaLink": "/community",
+      "secondaryCtaText": "Lihat Forum",
+      "secondaryCtaLink": "/forum",
+      "badge": "🌍 Global Network",
+      "stats": {
+        "members": "1M+",
+        "countries": "150+",
+        "discussions": "10K+"
+      }
+    },
+    {
+      "id": "slide-4",
+      "title": "Sertifikasi Profesional Terakreditasi",
+      "subtitle": "Boost Karir dengan Sertifikat Resmi",
+      "description": "Dapatkan sertifikat profesional yang diakui industri global dan tingkatkan peluang karir Anda",
+      "image": "https://placehold.co/600x400?text=Professional+Certificate&bg=f59e0b&color=fff",
+      "ctaText": "Lihat Sertifikat",
+      "ctaLink": "/certificates",
+      "secondaryCtaText": "Mulai Sertifikasi",
+      "secondaryCtaLink": "/certification",
+      "badge": "🏆 Terakreditasi Global",
+      "stats": {
+        "certificates": "25K+",
+        "partners": "500+",
+        "recognition": "Global"
+      }
+    },
+    {
+      "id": "slide-5",
+      "title": "AI-Powered Learning Experience",
+      "subtitle": "Personalisasi Pembelajaran dengan Kecerdasan Buatan",
+      "description": "Rasakan pengalaman belajar yang dipersonalisasi dengan AI yang memahami gaya belajar dan kebutuhan Anda",
+      "image": "https://placehold.co/600x400?text=AI+Learning&bg=ec4899&color=fff",
+      "ctaText": "Coba AI Learning",
+      "ctaLink": "/ai-learning",
+      "secondaryCtaText": "Lihat Demo AI",
+      "secondaryCtaLink": "/ai-demo",
+      "badge": "🤖 AI-Powered",
+      "stats": {
+        "accuracy": "99%",
+        "personalization": "100%",
+        "efficiency": "300%"
+      }
+    }
+  ]
+}

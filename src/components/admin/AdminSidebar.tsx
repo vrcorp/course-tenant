@@ -15,8 +15,6 @@ import {
 const menu = [
   { label: 'Dashboard', href: '/admin/dashboard', icon: LayoutDashboard },
   { label: 'Courses', href: '/admin/courses', icon: BookOpen },
-  { label: 'Quizzes', href: '/admin/quizzes', icon: HelpCircle },
-  { label: 'Classes', href: '/admin/classes', icon: School },
   { label: 'Certificates', href: '/admin/certificates', icon: Award },
   { label: 'Assignments', href: '/admin/assignments', icon: FileText },
   { label: 'Users', href: '/admin/users', icon: Users },

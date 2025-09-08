@@ -1,192 +1,448 @@
-import { useState, useEffect, useMemo } from 'react';
-import { Card } from '@/components/ui/card';
+import React, { useState, useEffect } from 'react';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Plus, ChevronLeft, ChevronRight } from 'lucide-react';
-import { useToast } from '@/components/ui/use-toast';
-
-import { certificatesData } from './data';
+import { Badge } from '@/components/ui/badge';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+} from '@/components/ui/dialog';
+import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
+import { 
+  Plus, 
+  Search, 
+  MoreHorizontal, 
+  Edit, 
+  Trash2, 
+  Eye,
+  Award,
+  FileImage,
+  Settings,
+  Copy,
+  Download
+} from 'lucide-react';
+import { toast } from 'sonner';
 import { Certificate } from './types';
-import { CertificateTable, CertificateEditModal } from './components';
-
-const ITEMS_PER_PAGE = 10;
-
-const loadArray = <T,>(key: string, defaultValue: T[]): T[] => {
-  try {
-    const data = localStorage.getItem(key);
-    return data ? (JSON.parse(data) as T[]) : defaultValue;
-  } catch {
-    return defaultValue;
-  }
-};
-
-const saveArray = <T,>(key: string, data: T[]): void => {
-  try {
-    localStorage.setItem(key, JSON.stringify(data));
-  } catch {}
-};
-
-const generateId = () => `cert_${Date.now()}_${Math.random().toString(36).slice(2, 6)}`;
+import { certificatesData } from './data';
+import CertificateDesigner from './components/CertificateDesigner';
 
 export default function AdminCertificates() {
-  const { toast } = useToast();
-
   const [certificates, setCertificates] = useState<Certificate[]>([]);
+  const [filteredCertificates, setFilteredCertificates] = useState<Certificate[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState<'all' | 'published' | 'draft'>('all');
-  const [currentPage, setCurrentPage] = useState(1);
-
-  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
-  const [editingId, setEditingId] = useState<string | null>(null);
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [formData, setFormData] = useState<Omit<Certificate, 'id'>>({
-    template: '',
-    issuer: '',
-    published: false,
+  const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
+  const [editingCertificate, setEditingCertificate] = useState<Certificate | null>(null);
+  const [designingCertificate, setDesigningCertificate] = useState<Certificate | null>(null);
+  const [formData, setFormData] = useState({
+    name: '',
+    description: '',
+    issuer: ''
   });
 
   useEffect(() => {
-    const initial = loadArray<Certificate>('certificates', certificatesData);
-    setCertificates(initial);
+    setCertificates(certificatesData);
+    setFilteredCertificates(certificatesData);
   }, []);
 
-  const filtered = useMemo(() => {
-    return certificates.filter((c) => {
-      const term = searchTerm.toLowerCase();
-      const matchSearch = term === '' || c.template.toLowerCase().includes(term) || c.issuer.toLowerCase().includes(term);
-      const matchStatus =
-        statusFilter === 'all' || (statusFilter === 'published' ? c.published : !c.published);
-      return matchSearch && matchStatus;
-    });
+  useEffect(() => {
+    let filtered = certificates;
+
+    // Search filter
+    if (searchTerm) {
+      filtered = filtered.filter(cert =>
+        cert.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        cert.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        cert.issuer.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+    }
+
+    // Status filter
+    if (statusFilter !== 'all') {
+      filtered = filtered.filter(cert => 
+        statusFilter === 'published' ? cert.published : !cert.published
+      );
+    }
+
+    setFilteredCertificates(filtered);
   }, [certificates, searchTerm, statusFilter]);
 
-  const totalPages = Math.ceil(filtered.length / ITEMS_PER_PAGE) || 1;
-  const currentItems = useMemo(() => {
-    const start = (currentPage - 1) * ITEMS_PER_PAGE;
-    return filtered.slice(start, start + ITEMS_PER_PAGE);
-  }, [filtered, currentPage]);
-
-  const handleAdd = () => {
-    setEditingId(null);
-    setFormData({ template: '', issuer: '', published: false });
-    setIsEditModalOpen(true);
+  const handleAddCertificate = () => {
+    setEditingCertificate(null);
+    setFormData({ name: '', description: '', issuer: '' });
+    setIsAddDialogOpen(true);
   };
 
-  const handleEdit = (c: Certificate) => {
-    setEditingId(c.id);
-    const { id, ...rest } = c;
-    setFormData(rest);
-    setIsEditModalOpen(true);
+  const handleEditCertificate = (certificate: Certificate) => {
+    setEditingCertificate(certificate);
+    setFormData({
+      name: certificate.name,
+      description: certificate.description,
+      issuer: certificate.issuer
+    });
+    setIsAddDialogOpen(true);
   };
 
-  const handleDelete = (id: string) => {
-    const updated = certificates.filter((c) => c.id !== id);
-    setCertificates(updated);
-    saveArray('certificates', updated);
-    toast({ title: 'Deleted', description: 'Certificate removed' });
+  const handleDesignCertificate = (certificate: Certificate) => {
+    setDesigningCertificate(certificate);
   };
 
-  const handleTogglePublish = (id: string) => {
-    const updated = certificates.map((c) => (c.id === id ? { ...c, published: !c.published } : c));
-    setCertificates(updated);
-    saveArray('certificates', updated);
-    toast({ title: 'Status Updated' });
-  };
-
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmitCertificate = (e: React.FormEvent) => {
     e.preventDefault();
-    setIsSubmitting(true);
-    try {
-      if (editingId) {
-        const updated = certificates.map((c) => (c.id === editingId ? { ...formData, id: editingId } : c));
-        setCertificates(updated);
-        saveArray('certificates', updated);
-        toast({ title: 'Updated', description: 'Certificate updated successfully' });
-      } else {
-        const newCert: Certificate = { ...formData, id: generateId() };
-        const updated = [...certificates, newCert];
-        setCertificates(updated);
-        saveArray('certificates', updated);
-        toast({ title: 'Added', description: 'New certificate added' });
-      }
-    } finally {
-      setIsSubmitting(false);
-      setIsEditModalOpen(false);
+    
+    if (editingCertificate) {
+      // Update existing certificate
+      const updatedCertificates = certificates.map(cert => 
+        cert.id === editingCertificate.id 
+          ? { ...cert, ...formData, updatedAt: new Date().toISOString() }
+          : cert
+      );
+      setCertificates(updatedCertificates);
+      toast.success('Certificate updated successfully');
+    } else {
+      // Add new certificate
+      const newCertificate: Certificate = {
+        id: `cert-${Date.now()}`,
+        ...formData,
+        backgroundImage: 'https://placehold.co/800x600/f0f9ff/1e40af?text=New+Certificate',
+        width: 800,
+        height: 600,
+        elements: [
+          {
+            id: 'title',
+            type: 'text',
+            content: 'Certificate of Completion',
+            x: 400,
+            y: 150,
+            width: 600,
+            height: 60,
+            fontSize: 36,
+            fontFamily: 'Arial',
+            color: '#1e40af',
+            fontWeight: 'bold',
+            textAlign: 'center'
+          },
+          {
+            id: 'student-name',
+            type: 'text',
+            content: '{{studentName}}',
+            x: 400,
+            y: 250,
+            width: 500,
+            height: 40,
+            fontSize: 28,
+            fontFamily: 'Arial',
+            color: '#374151',
+            fontWeight: 'normal',
+            textAlign: 'center'
+          }
+        ],
+        published: false,
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString()
+      };
+      setCertificates(prev => [...prev, newCertificate]);
+      toast.success('Certificate created successfully');
     }
+    
+    setIsAddDialogOpen(false);
   };
+
+  const handleDeleteCertificate = (certificateId: string) => {
+    setCertificates(prev => prev.filter(cert => cert.id !== certificateId));
+    toast.success('Certificate deleted successfully');
+  };
+
+  const handleTogglePublish = (certificateId: string) => {
+    setCertificates(prev => prev.map(cert => 
+      cert.id === certificateId 
+        ? { ...cert, published: !cert.published, updatedAt: new Date().toISOString() }
+        : cert
+    ));
+    const certificate = certificates.find(c => c.id === certificateId);
+    toast.success(`Certificate ${certificate?.published ? 'unpublished' : 'published'} successfully`);
+  };
+
+  const handleDuplicateCertificate = (certificate: Certificate) => {
+    const duplicatedCertificate: Certificate = {
+      ...certificate,
+      id: `cert-${Date.now()}`,
+      name: `${certificate.name} (Copy)`,
+      published: false,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString()
+    };
+    setCertificates(prev => [...prev, duplicatedCertificate]);
+    toast.success('Certificate duplicated successfully');
+  };
+
+  const handleSaveDesign = (updatedCertificate: Certificate) => {
+    setCertificates(prev => prev.map(cert => 
+      cert.id === updatedCertificate.id ? updatedCertificate : cert
+    ));
+    setDesigningCertificate(null);
+    toast.success('Certificate design saved successfully');
+  };
+
+  const getStatusBadge = (published: boolean) => {
+    return (
+      <Badge className={published ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'}>
+        {published ? 'Published' : 'Draft'}
+      </Badge>
+    );
+  };
+
+  if (designingCertificate) {
+    return (
+      <CertificateDesigner
+        certificate={designingCertificate}
+        onSave={handleSaveDesign}
+        onClose={() => setDesigningCertificate(null)}
+      />
+    );
+  }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 p-6">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-        <h1 className="text-2xl font-semibold">Certificates</h1>
-        <div className="flex gap-2 w-full sm:w-auto">
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-2xl font-semibold">Certificate Templates</h1>
+          <p className="text-muted-foreground">Create and manage certificate templates for your courses</p>
+        </div>
+      </div>
+
+      {/* Stats Cards */}
+      <div className="grid gap-4 md:grid-cols-4">
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Total Templates</CardTitle>
+            <Award className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{certificates.length}</div>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Published</CardTitle>
+            <Eye className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">
+              {certificates.filter(c => c.published).length}
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Draft</CardTitle>
+            <FileImage className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">
+              {certificates.filter(c => !c.published).length}
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Elements</CardTitle>
+            <Settings className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">
+              {certificates.reduce((sum, cert) => sum + cert.elements.length, 0)}
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Search and Add */}
+      <div className="flex flex-col sm:flex-row gap-4 justify-between">
+        <div className="relative flex-1 max-w-sm">
+          <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
           <Input
-            placeholder="Search..."
+            placeholder="Search certificates..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="sm:w-64"
+            className="pl-10"
           />
+        </div>
+        <div className="flex gap-2">
           <select
             value={statusFilter}
             onChange={(e) => setStatusFilter(e.target.value as 'all' | 'published' | 'draft')}
             className="h-10 px-3 rounded-md border border-input bg-background text-sm"
           >
-            <option value="all">All</option>
+            <option value="all">All Status</option>
             <option value="published">Published</option>
             <option value="draft">Draft</option>
           </select>
-          <Button onClick={handleAdd} className="gap-2">
-            <Plus className="h-4 w-4" /> Add Certificate
+          <Button onClick={handleAddCertificate} className="gap-2">
+            <Plus className="h-4 w-4" />
+            Create Template
           </Button>
         </div>
       </div>
 
-      {/* Table */}
+      {/* Certificates Table */}
       <Card>
-        <CertificateTable
-          certificates={currentItems}
-          onEdit={handleEdit}
-          onDelete={handleDelete}
-          onTogglePublish={handleTogglePublish}
-        />
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead>Template</TableHead>
+              <TableHead>Issuer</TableHead>
+              <TableHead>Elements</TableHead>
+              <TableHead>Status</TableHead>
+              <TableHead>Created</TableHead>
+              <TableHead className="text-right">Actions</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {filteredCertificates.map((certificate) => (
+              <TableRow key={certificate.id}>
+                <TableCell>
+                  <div className="flex items-center gap-3">
+                    <div className="w-12 h-8 bg-gradient-to-r from-blue-500 to-purple-600 rounded flex items-center justify-center">
+                      <Award className="h-4 w-4 text-white" />
+                    </div>
+                    <div>
+                      <div className="font-medium">{certificate.name}</div>
+                      <div className="text-sm text-muted-foreground line-clamp-1">
+                        {certificate.description}
+                      </div>
+                    </div>
+                  </div>
+                </TableCell>
+                <TableCell>{certificate.issuer}</TableCell>
+                <TableCell>{certificate.elements.length} elements</TableCell>
+                <TableCell>{getStatusBadge(certificate.published)}</TableCell>
+                <TableCell>{new Date(certificate.createdAt).toLocaleDateString()}</TableCell>
+                <TableCell className="text-right">
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button variant="ghost" size="sm">
+                        <MoreHorizontal className="h-4 w-4" />
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end">
+                      <DropdownMenuItem onClick={() => handleDesignCertificate(certificate)}>
+                        <Settings className="h-4 w-4 mr-2" />
+                        Design Template
+                      </DropdownMenuItem>
+                      <DropdownMenuItem onClick={() => handleEditCertificate(certificate)}>
+                        <Edit className="h-4 w-4 mr-2" />
+                        Edit Details
+                      </DropdownMenuItem>
+                      <DropdownMenuItem onClick={() => handleDuplicateCertificate(certificate)}>
+                        <Copy className="h-4 w-4 mr-2" />
+                        Duplicate
+                      </DropdownMenuItem>
+                      <DropdownMenuItem onClick={() => handleTogglePublish(certificate.id)}>
+                        <Eye className="h-4 w-4 mr-2" />
+                        {certificate.published ? 'Unpublish' : 'Publish'}
+                      </DropdownMenuItem>
+                      <DropdownMenuItem>
+                        <Download className="h-4 w-4 mr-2" />
+                        Export Template
+                      </DropdownMenuItem>
+                      <DropdownMenuItem 
+                        className="text-red-600"
+                        onClick={() => handleDeleteCertificate(certificate.id)}
+                      >
+                        <Trash2 className="h-4 w-4 mr-2" />
+                        Delete
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
       </Card>
 
-      {/* Pagination */}
-      <div className="flex items-center justify-between mt-4">
-        <p className="text-sm text-muted-foreground">
-          Page {currentPage} of {totalPages}
-        </p>
-        <div className="flex gap-2">
-          <Button
-            size="sm"
-            variant="outline"
-            disabled={currentPage === 1}
-            onClick={() => setCurrentPage((p) => p - 1)}
-          >
-            <ChevronLeft className="h-4 w-4" />
-          </Button>
-          <Button
-            size="sm"
-            variant="outline"
-            disabled={currentPage === totalPages}
-            onClick={() => setCurrentPage((p) => p + 1)}
-          >
-            <ChevronRight className="h-4 w-4" />
-          </Button>
-        </div>
-      </div>
+      {/* Add/Edit Certificate Dialog */}
+      <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
+        <DialogContent className="max-w-lg">
+          <DialogHeader>
+            <DialogTitle>
+              {editingCertificate ? 'Edit Certificate Template' : 'Create New Certificate Template'}
+            </DialogTitle>
+            <DialogDescription>
+              {editingCertificate ? 'Update certificate information' : 'Create a new certificate template for your courses'}
+            </DialogDescription>
+          </DialogHeader>
 
-      {/* Edit Modal */}
-      <CertificateEditModal
-        isOpen={isEditModalOpen}
-        onClose={() => setIsEditModalOpen(false)}
-        isSubmitting={isSubmitting}
-        editingId={editingId}
-        formData={formData}
-        setFormData={setFormData}
-        onSubmit={handleSubmit}
-      />
+          <form onSubmit={handleSubmitCertificate} className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="name">Template Name</Label>
+              <Input
+                id="name"
+                value={formData.name}
+                onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))}
+                placeholder="Enter template name"
+                required
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="description">Description</Label>
+              <Textarea
+                id="description"
+                value={formData.description}
+                onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
+                placeholder="Describe this certificate template"
+                rows={3}
+                required
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="issuer">Issuer</Label>
+              <Input
+                id="issuer"
+                value={formData.issuer}
+                onChange={(e) => setFormData(prev => ({ ...prev, issuer: e.target.value }))}
+                placeholder="Organization or institution name"
+                required
+              />
+            </div>
+
+            <DialogFooter>
+              <Button type="button" variant="outline" onClick={() => setIsAddDialogOpen(false)}>
+                Cancel
+              </Button>
+              <Button type="submit">
+                {editingCertificate ? 'Update Template' : 'Create Template'}
+              </Button>
+            </DialogFooter>
+          </form>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

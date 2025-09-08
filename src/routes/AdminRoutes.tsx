@@ -16,7 +16,9 @@ import AdminAffiliatorPayouts from '../pages/admin/baruisi/AffiliatorPayouts';
 import AdminAffiliatorAnalytics from '../pages/admin/baruisi/AffiliatorAnalytics';
 import AdminInstructors from '../pages/admin/baruisi/instructors/Instructors';
 import AdminLayout from '../components/admin/AdminLayout';
-import AdminCourses from '../pages/admin/baruisi/courses/Courses';
+import AdminCourses from '../pages/admin/baruisi/courses/AdminCourses';
+import CourseQuizzes from '../pages/admin/baruisi/courses/CourseQuizzes';
+import QuizQuestions from '../pages/admin/baruisi/courses/QuizQuestions';
 import AdminQuizzes from '../pages/admin/baruisi/quizzes/Quizzes';
 import AdminClasses from '../pages/admin/baruisi/classes/Classes';
 import AdminCertificates from '../pages/admin/baruisi/certificates/Certificates';
@@ -26,27 +28,29 @@ const AdminRoutes: React.FC = () => {
   return (
     <Routes>
       <Route element={<AdminLayout />}>
-      <Route path="/admin" element={<AdminDashboard />} />
-      <Route path="/admin/dashboard" element={<AdminDashboard />} />
-      <Route path="/admin/tenants" element={<AdminTenants />} />
-      <Route path="/admin/api-keys" element={<AdminApiKeys />} />
-      <Route path="/admin/audit-logs" element={<AdminAuditLogs />} />
-      <Route path="/admin/config" element={<AdminConfig />} />
-      <Route path="/admin/vouchers" element={<AdminVouchers />} />
-      <Route path="/admin/orders" element={<AdminOrders />} />
-      <Route path="/admin/users" element={<AdminUsers />} />
-      <Route path="/admin/site-settings" element={<AdminSiteSettings />} />
-      <Route path="/admin/api-settings" element={<AdminApiSettings />} />
-      <Route path="/admin/reports" element={<AdminReports />} />
-      <Route path="/admin/affiliators" element={<AdminAffiliators />} />
-      <Route path="/admin/affiliator-payouts" element={<AdminAffiliatorPayouts />} />
-      <Route path="/admin/affiliator-analytics" element={<AdminAffiliatorAnalytics />} />
-      <Route path="/admin/instructors" element={<AdminInstructors />} />
-        <Route path="/admin/courses" element={<AdminCourses />} />
-        <Route path="/admin/quizzes" element={<AdminQuizzes />} />
-        <Route path="/admin/classes" element={<AdminClasses />} />
-        <Route path="/admin/certificates" element={<AdminCertificates />} />
-        <Route path="/admin/assignments" element={<AdminAssignments />} />
+      <Route index element={<AdminDashboard />} />
+      <Route path="dashboard" element={<AdminDashboard />} />
+      <Route path="tenants" element={<AdminTenants />} />
+      <Route path="api-keys" element={<AdminApiKeys />} />
+      <Route path="audit-logs" element={<AdminAuditLogs />} />
+      <Route path="config" element={<AdminConfig />} />
+      <Route path="vouchers" element={<AdminVouchers />} />
+      <Route path="orders" element={<AdminOrders />} />
+      <Route path="users" element={<AdminUsers />} />
+      <Route path="site-settings" element={<AdminSiteSettings />} />
+      <Route path="api-settings" element={<AdminApiSettings />} />
+      <Route path="reports" element={<AdminReports />} />
+      <Route path="affiliators" element={<AdminAffiliators />} />
+      <Route path="affiliator-payouts" element={<AdminAffiliatorPayouts />} />
+      <Route path="affiliator-analytics" element={<AdminAffiliatorAnalytics />} />
+      <Route path="instructors" element={<AdminInstructors />} />
+        <Route path="courses" element={<AdminCourses />} />
+        <Route path="courses/:courseId/quizzes" element={<CourseQuizzes />} />
+        <Route path="courses/:courseId/quizzes/:quizId/questions" element={<QuizQuestions />} />
+        <Route path="quizzes" element={<AdminQuizzes />} />
+        <Route path="classes" element={<AdminClasses />} />
+        <Route path="certificates" element={<AdminCertificates />} />
+        <Route path="assignments" element={<AdminAssignments />} />
           </Route>
     </Routes>
   );

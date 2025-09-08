@@ -7,7 +7,7 @@ import { useToast } from '@/components/ui/use-toast';
 
 import { quizzesData } from './data';
 import { Quiz, QuizStatus } from './types';
-import { QuizTable, QuizEditModal } from './components';
+import { QuizTable, QuizEditModal, QuestionListModal } from './components';
 
 const ITEMS_PER_PAGE = 10;
 
@@ -39,10 +39,16 @@ export default function AdminQuizzes() {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [viewingQuiz, setViewingQuiz] = useState<Quiz | null>(null);
   const [formData, setFormData] = useState<Omit<Quiz, 'id'>>({
+    courseId: '',
     title: '',
-    questions: 1,
+    description: '',
+    duration: 0,
+    passingScore: 0,
     status: 'draft',
+    createdAt: new Date().toISOString(),
+    questions: [],
   });
 
   useEffect(() => {
@@ -67,7 +73,16 @@ export default function AdminQuizzes() {
 
   const handleAdd = () => {
     setEditingId(null);
-    setFormData({ title: '', questions: 1, status: 'draft' });
+    setFormData({
+      courseId: '',
+      title: '',
+      description: '',
+      duration: 0,
+      passingScore: 0,
+      status: 'draft',
+      createdAt: new Date().toISOString(),
+      questions: [],
+    });
     setIsEditModalOpen(true);
   };
 
@@ -149,6 +164,7 @@ export default function AdminQuizzes() {
           onEdit={handleEdit}
           onDelete={handleDelete}
           onStatusChange={handleStatusChange}
+          onView={(q)=>setViewingQuiz(q)}
         />
       </Card>
 
@@ -187,6 +203,9 @@ export default function AdminQuizzes() {
         setFormData={setFormData}
         onSubmit={handleSubmit}
       />
+
+      {/* Questions Modal */}
+      <QuestionListModal quiz={viewingQuiz} onClose={()=>setViewingQuiz(null)} />
     </div>
   );
 }

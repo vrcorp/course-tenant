@@ -1,4 +1,58 @@
-[
-  { "id": "qz-u-1", "title": "HTML Basics", "questions": 6, "status": "published" },
-  { "id": "qz-u-2", "title": "CSS Layout", "questions": 7, "status": "draft" }
-]
+{
+  "quizzes": [
+    {
+      "id": "quiz-react-basics",
+      "courseId": "c1",
+      "title": "React Basics Quiz",
+      "description": "Test your knowledge of React fundamentals.",
+      "duration": 10,
+      "passingScore": 70,
+      "status": "published",
+      "createdAt": "2024-02-01",
+      "questions": [
+        {
+          "id": "q1",
+          "type": "multiple_choice",
+          "question": "What is JSX in React?",
+          "options": [
+            "A syntax extension for JavaScript",
+            "A database engine",
+            "A CSS pre-processor",
+            "A server-side framework"
+          ],
+          "answer": 0,
+          "explanation": "JSX lets you write HTML in JavaScript."
+        },
+        {
+          "id": "q2",
+          "type": "true_false",
+          "question": "State updates in React are synchronous.",
+          "answer": false,
+          "explanation": "They are asynchronous for performance reasons."
+        }
+      ]
+    },
+    {
+      "id": "quiz-css-grid",
+      "courseId": "c2",
+      "title": "CSS Grid & Flexbox Quiz",
+      "description": "Assess your understanding of modern CSS layout techniques.",
+      "duration": 8,
+      "passingScore": 75,
+      "status": "draft",
+      "createdAt": "2024-03-12",
+      "questions": []
+    },
+    {
+      "id": "quiz-uiux-design",
+      "courseId": "c3",
+      "title": "UI/UX Essentials Quiz",
+      "description": "Check your grasp of design foundations and heuristics.",
+      "duration": 12,
+      "passingScore": 80,
+      "status": "archived",
+      "createdAt": "2024-01-30",
+      "questions": []
+    }
+  ]
+}

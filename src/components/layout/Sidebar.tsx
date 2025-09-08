@@ -201,8 +201,6 @@ export function Sidebar() {
           icon: BookOpen,
           items: [
             { title: "Courses", href: "/admin/courses" },
-            { title: "Quizzes", href: "/admin/quizzes" },
-            { title: "Classes", href: "/admin/classes" },
             { title: "Certificates", href: "/admin/certificates" },
             { title: "Assignments", href: "/admin/assignments" },
           ],
@@ -257,8 +255,6 @@ export function Sidebar() {
         icon: BookOpen,
         items: [
           { title: "Courses", href: "/admin/courses" },
-          { title: "Quizzes", href: "/admin/quizzes" },
-          { title: "Classes", href: "/admin/classes" },
           { title: "Certificates", href: "/admin/certificates" },
           { title: "Assignments", href: "/admin/assignments" },
         ],

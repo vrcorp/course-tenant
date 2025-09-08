@@ -64,7 +64,8 @@ import AdminUsers from "./pages/admin/baruisi/users/Users";
 import AdminInstructors from "./pages/admin/baruisi/instructors/Instructors";
 import AdminAffiliators from "./pages/admin/baruisi/affiliators/Affiliators";
 
-import AdminCourses from "./pages/tenant/admin/AdminCourses";
+// Removed old AdminCourses import - now using the one in AdminRoutes
+import AdminCourses from "./pages/admin/baruisi/courses/AdminCourses";
 import AdminQuizzes from "./pages/admin/baruisi/quizzes/Quizzes";
 import AdminClasses from "./pages/admin/baruisi/classes/Classes";
 import AdminCertificates from "./pages/admin/baruisi/certificates/Certificates";
@@ -106,6 +107,8 @@ import { CartProvider } from "./contexts/CartContext";
 import { WishlistProvider } from "./contexts/WishlistContext";
 import { useGuestTransfer } from "./hooks/useGuestTransfer";
 import TenantLayout from "./components/tenant/TenantLayout";
+import CourseQuizzes from "./pages/admin/baruisi/courses/CourseQuizzes";
+import QuizQuestions from "./pages/admin/baruisi/courses/QuizQuestions";
 
 const queryClient = new QueryClient();
 
@@ -431,6 +434,8 @@ const App = () => (
 
             {/* Core content routes */}
             <Route path="/admin/courses" element={<ProtectedRoute allow={["admin", "super_admin"]} element={<AdminCourses />} />} />
+            <Route path="/admin/courses/:courseId/quizzes" element={<ProtectedRoute allow={["admin", "super_admin"]} element={<CourseQuizzes />} />} />
+            <Route path="/admin/courses/:courseId/quizzes/:quizId/questions" element={<ProtectedRoute allow={["admin", "super_admin"]} element={<QuizQuestions />} />} />
             <Route path="/admin/quizzes" element={<ProtectedRoute allow={["admin", "super_admin"]} element={<AdminQuizzes />} />} />
             <Route path="/admin/classes" element={<ProtectedRoute allow={["admin", "super_admin"]} element={<AdminClasses />} />} />
             <Route path="/admin/certificates" element={<ProtectedRoute allow={["admin", "super_admin"]} element={<AdminCertificates />} />} />
@@ -440,6 +445,12 @@ const App = () => (
             {/* Commerce routes */}
             <Route path="/admin/vouchers" element={<ProtectedRoute allow={["admin", "super_admin"]} element={<AdminVouchers />} />} />
             <Route path="/admin/orders" element={<ProtectedRoute allow={["admin", "super_admin"]} element={<AdminOrders />} />} />
+
+
+            {/* Settings */}
+            <Route path="/admin/site-settings" element={<ProtectedRoute allow={["admin", "super_admin"]} element={<AdminSiteSettings />} />} />
+            <Route path="/admin/api-settings" element={<ProtectedRoute allow={["admin", "super_admin"]} element={<AdminApiSettings />} />} />
+            <Route path="/admin/reports" element={<ProtectedRoute allow={["admin", "super_admin"]} element={<AdminReports />} />} />
 
             <Route path="/tenant-admin/instructors" element={<ProtectedRoute allow={["user"]} element={<TenantAdminRoute element={<TenantAdminInstructors />} />} />} />
             <Route path="/tenant-admin/classes" element={<ProtectedRoute allow={["user"]} element={<TenantAdminRoute element={<TenantAdminClasses />} />} />} />
