@@ -1,30 +1,38 @@
 import { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import { ChevronLeft, ChevronRight, ArrowRight, Play } from "lucide-react";
-import heroData from "@/data/hero-slides.json";
 
-interface HeroSlide {
-  id: string;
-  title: string;
-  subtitle: string;
-  description: string;
-  image: string;
-  ctaText: string;
-  ctaLink: string;
-  secondaryCtaText: string;
-  secondaryCtaLink: string;
-  badge: string;
-  stats: {
-    [key: string]: string;
+interface HeroProps {
+  slides: Array<{
+    id: string;
+    title: string;
+    subtitle: string;
+    description: string;
+    image: string;
+    badge: string;
+    stats: {
+      [key: string]: string;
+    };
+    ctaText: string;
+    ctaLink: string;
+    secondaryCtaText?: string;
+    secondaryCtaLink?: string;
+  }>;
+  tenant: {
+    name: string;
+    branding: { logo: string; theme: string };
   };
 }
 
-export default function Hero() {
+
+export default function Hero({ slides, tenant }: HeroProps) {
+  console.log("slides", slides);
+  console.log("tenant", tenant);
+  
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isAutoPlaying, setIsAutoPlaying] = useState(true);
   const [touchStart, setTouchStart] = useState(0);
   const [touchEnd, setTouchEnd] = useState(0);
-  const slides: HeroSlide[] = heroData.slides;
   const carouselRef = useRef<HTMLDivElement>(null);
 
   // Auto-slide functionality

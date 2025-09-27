@@ -1,11 +1,11 @@
-import faqs from "@/data/faqs.json";
 import { brandify } from "@/lib/brand";
 import { useState } from "react";
 import { ChevronDown, ChevronUp, HelpCircle } from "lucide-react";
 
-export default function Faqs() {
+export default function Faqs({ faqs }: { faqs: any }) {
   const [openId, setOpenId] = useState<string | null>(null);
   const toggle = (id: string) => setOpenId((cur) => (cur === id ? null : id));
+  console.log("faqs", faqs);
   
   return (
     <section className="py-24 px-4 bg-gradient-to-b from-white via-slate-50 to-white dark:from-slate-900 dark:via-slate-800 dark:to-slate-900 relative overflow-hidden">

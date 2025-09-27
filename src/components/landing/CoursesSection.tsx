@@ -5,10 +5,15 @@ import { BookOpen, Clock, Star, Users, ArrowRight, Play, Award } from "lucide-re
 import { Link } from "react-router-dom";
 import coursesData from "@/data/courses.json";
 
-export default function CoursesSection() {
+export default function CoursesSection({ courses }: { courses: any }) {
+  console.log("courses", courses);
+  
+  // Handle both array and object structures
+  const coursesArray = Array.isArray(courses) ? courses : courses?.courses || [];
+  
   // Get featured courses (limit to 6 for landing page)
-  const featuredCourses = coursesData.courses.filter(course => course.featured).slice(0, 6);
-  const stats = coursesData.stats;
+  const featuredCourses = coursesArray.filter((course: any) => course.featured).slice(0, 6);
+  const stats = courses?.stats || {};
 
   const formatPrice = (price: number) => {
     return new Intl.NumberFormat('id-ID', {
@@ -46,10 +51,10 @@ export default function CoursesSection() {
           {/* Stats */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-4xl mx-auto mb-12">
             {[
-              { label: "Total Kursus", value: stats.totalCourses, suffix: "+" },
-              { label: "Total Siswa", value: formatNumber(stats.totalStudents), suffix: "" },
-              { label: "Instruktur Expert", value: stats.totalInstructors, suffix: "+" },
-              { label: "Rating Rata-rata", value: stats.averageRating, suffix: "/5" }
+              { label: "Total Kursus", value: stats.totalCourses || coursesArray.length, suffix: "+" },
+              { label: "Total Siswa", value: formatNumber(stats.totalStudents || 5000), suffix: "" },
+              { label: "Instruktur Expert", value: stats.totalInstructors || 25, suffix: "+" },
+              { label: "Rating Rata-rata", value: stats.averageRating || 4.8, suffix: "/5" }
             ].map((stat, i) => (
               <div key={i} className="text-center">
                 <div className="text-3xl md:text-4xl font-bold text-blue-600 dark:text-blue-400 mb-2">
@@ -62,8 +67,9 @@ export default function CoursesSection() {
         </div>
 
         {/* Featured Courses Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
-          {featuredCourses.map((course) => (
+        {featuredCourses.length > 0 ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
+            {featuredCourses.map((course) => (
             <Link key={course.id} to={`/course/${course.id}`} className="block">
               <Card className="group hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 bg-white dark:bg-slate-800 border-0 shadow-lg overflow-hidden cursor-pointer">
               <div className="relative">
@@ -165,8 +171,17 @@ export default function CoursesSection() {
               </CardContent>
               </Card>
             </Link>
-          ))}
-        </div>
+            ))}
+          </div>
+        ) : (
+          <div className="text-center py-12">
+            <div className="text-gray-500 dark:text-gray-400 mb-4">
+              <BookOpen className="h-16 w-16 mx-auto mb-4 opacity-50" />
+              <p className="text-lg">Belum ada kursus featured yang tersedia</p>
+              <p className="text-sm">Kursus akan segera hadir!</p>
+            </div>
+          </div>
+        )}
 
         {/* CTA */}
         <div className="text-center">
@@ -178,7 +193,7 @@ export default function CoursesSection() {
           </Link>
           
           <p className="text-sm text-gray-600 dark:text-gray-400 mt-4">
-            Lebih dari {stats.totalCourses} kursus tersedia dengan berbagai kategori
+            Lebih dari {stats.totalCourses || coursesArray.length} kursus tersedia dengan berbagai kategori
           </p>
         </div>
       </div>

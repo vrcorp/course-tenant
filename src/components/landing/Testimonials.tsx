@@ -1,8 +1,26 @@
-import testimonials from "@/data/testimonials.json";
 import { Card, CardContent } from "@/components/ui/card";
 import { Star, Quote } from "lucide-react";
 
-export default function Testimonials() {
+interface Testimonial {
+  id: string;
+  name: string;
+  title: string;
+  avatar: string;
+  quote: string;
+  rating: number;
+  user: {
+    id: string;
+    name: string;
+    avatar: string;
+  };
+}
+
+export default function Testimonials({ testimonials }: { testimonials: Testimonial[] }) {
+  // Safety check
+  if (!testimonials || !Array.isArray(testimonials) || testimonials.length === 0) {
+    return null; // Or return a placeholder/message
+  }
+  
   return (
     <section className="py-24 px-4 bg-gradient-to-b from-slate-50 via-white to-slate-100 dark:from-slate-800 dark:via-slate-900 dark:to-slate-800 relative overflow-hidden">
       {/* Background decorations */}
