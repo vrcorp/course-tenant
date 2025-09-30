@@ -1,9 +1,10 @@
-import { useState, useMemo } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Skeleton } from "@/components/ui/skeleton";
 import { 
   BookOpen, 
   Clock, 
@@ -21,13 +22,96 @@ import {
   BarChart3,
   Palette,
   TrendingUp,
-  Shield
+  Shield,
+  ChevronLeft,
+  ChevronRight
 } from "lucide-react";
 import { Link } from "react-router-dom";
-import coursesData from "@/data/courses.json";
+import { isServer } from '@tanstack/react-query';
+
+// TypeScript interfaces
+interface Category {
+  id: string;
+  name: string;
+  icon: string;
+  color: string;
+}
+
+interface Course {
+  id: string;
+  title: string;
+  slug: string;
+  description: string;
+  thumbnail: string;
+  price: number;
+  originalPrice: number;
+  discount: number;
+  level: string;
+  language: string;
+  duration: string;
+  lessons: number;
+  students: number;
+  rating: number;
+  reviews: number;
+  featured: boolean;
+  bestseller: boolean;
+  certificate: boolean;
+  skills: string[];
+  categoryId: string;
+  lastUpdated: string;
+  createdAt: string;
+  updatedAt: string;
+  tenantId: string;
+  instructor: {
+    name: string;
+    title: string;
+    avatar: string;
+  };
+  features: string[];
+  requirements: string[];
+  curriculum: Array<{
+    week: number;
+    topic: string;
+  }>;
+  Category: Category;
+}
+
+interface CoursesResponse {
+  success: boolean;
+  data: Course[];
+  pagination: {
+    page: number;
+    limit: number;
+    totalCount: number;
+    totalPages: number;
+    hasNextPage: boolean;
+    hasPrevPage: boolean;
+  };
+  statistics: {
+    totalStudents: number;
+    totalInstructors: number;
+    averageTestimonialRating: number;
+    totalTestimonials: number;
+  };
+  filters: {
+    search?: string;
+    category?: string;
+    level?: string;
+    language?: string;
+    featured?: boolean;
+    bestseller?: boolean;
+    certificate?: boolean;
+    minPrice?: number;
+    maxPrice?: number;
+    minRating?: number;
+    sortBy: string;
+    sortOrder: string;
+  };
+  message: string;
+}
 
 // Icon mapping for categories
-const categoryIcons = {
+const categoryIcons: { [key: string]: any } = {
   Code,
   Smartphone,
   BarChart3,
@@ -37,45 +121,149 @@ const categoryIcons = {
 };
 
 export default function Courses() {
+  // API Data State
+  const [coursesResponse, setCoursesResponse] = useState<CoursesResponse | null>(null);
+  const [categoriesList, setCategoriesList] = useState<Category[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  
+  // Filter and Pagination State
   const [searchQuery, setSearchQuery] = useState("");
+  const [debouncedSearchQuery, setDebouncedSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [selectedLevel, setSelectedLevel] = useState("all");
   const [sortBy, setSortBy] = useState("popular");
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
   const [showFilters, setShowFilters] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize] = useState(12);
 
-  const { categories, courses, stats } = coursesData;
+  // Debounce search query
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedSearchQuery(searchQuery);
+    }, 500);
 
-  // Filter and sort courses
-  const filteredAndSortedCourses = useMemo(() => {
-    let filtered = courses.filter(course => {
-      const matchesSearch = course.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                           course.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                           course.instructor.name.toLowerCase().includes(searchQuery.toLowerCase());
-      
-      const matchesCategory = selectedCategory === "all" || course.category === selectedCategory;
-      
-      const matchesLevel = selectedLevel === "all" || course.level.toLowerCase().includes(selectedLevel.toLowerCase());
-      
-      return matchesSearch && matchesCategory && matchesLevel;
-    });
+    return () => clearTimeout(timer);
+  }, [searchQuery]);
 
-    // Sort courses
-    switch (sortBy) {
-      case "popular":
-        return filtered.sort((a, b) => b.students - a.students);
-      case "rating":
-        return filtered.sort((a, b) => b.rating - a.rating);
-      case "price-low":
-        return filtered.sort((a, b) => a.price - b.price);
-      case "price-high":
-        return filtered.sort((a, b) => b.price - a.price);
-      case "newest":
-        return filtered.sort((a, b) => new Date(b.lastUpdated).getTime() - new Date(a.lastUpdated).getTime());
-      default:
-        return filtered;
+  // Fetch Categories Function
+  const fetchCategories = async () => {
+    try {
+      const baseUrl = isServer
+        ? process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000/api/"
+        : "http://localhost:3000/api/";
+      const tenantId = isServer
+        ? process.env.NEXT_TENANT_ID || "tenant-1"
+        : "tenant-1";
+      
+      const response = await fetch(`${baseUrl}categories`, {
+        method: "GET",
+        headers: {
+          "x-tenant-id": tenantId,
+          "Content-Type": "application/json",
+        },
+        referrerPolicy: 'strict-origin-when-cross-origin',
+        cache: "no-store",
+      });
+      
+      if (response.ok) {
+        const data = await response.json();
+        setCategoriesList(data.data || []);
+      }
+    } catch (err) {
+      console.error('Error fetching categories:', err);
     }
-  }, [courses, searchQuery, selectedCategory, selectedLevel, sortBy]);
+  };
+
+  // API Fetching Function
+  const fetchCourses = async () => {
+    try {
+      setLoading(true);
+      setError(null);
+      
+      const baseUrl = isServer
+        ? process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000/api/"
+        : "http://localhost:3000/api/";
+      const tenantId = isServer
+        ? process.env.NEXT_TENANT_ID || "tenant-1"
+        : "tenant-1";
+      
+      // Build query parameters
+      const params = new URLSearchParams({
+        page: currentPage.toString(),
+        limit: pageSize.toString(),
+        sortBy: sortBy === 'popular' ? 'students' : 
+                sortBy === 'newest' ? 'createdAt' : 
+                sortBy === 'rating' ? 'rating' : 
+                sortBy === 'price-low' ? 'price' : 
+                sortBy === 'price-high' ? 'price' : 'title',
+        sortOrder: sortBy === 'price-low' ? 'asc' : 
+                   sortBy === 'price-high' ? 'desc' : 
+                   sortBy === 'newest' ? 'desc' : 
+                   sortBy === 'rating' ? 'desc' : 
+                   sortBy === 'popular' ? 'desc' : 'asc'
+      });
+      
+      if (debouncedSearchQuery) params.append('search', debouncedSearchQuery);
+      if (selectedCategory !== 'all') params.append('category', selectedCategory);
+      if (selectedLevel !== 'all') params.append('level', selectedLevel);
+      
+      const response = await fetch(`${baseUrl}courses?${params}`, {
+        method: "GET",
+        headers: {
+          "x-tenant-id": tenantId,
+          "Content-Type": "application/json",
+        },
+        referrerPolicy: 'strict-origin-when-cross-origin',
+        cache: "no-store",
+      });
+      
+      if (!response.ok) {
+        throw new Error('Failed to fetch courses');
+      }
+      
+      const data: CoursesResponse = await response.json();
+      setCoursesResponse(data);
+      
+    } catch (err) {
+      console.error('Error fetching courses:', err);
+      setError('Gagal memuat data kursus. Silakan coba lagi nanti.');
+    } finally {
+      setLoading(false);
+    }
+  };
+  
+  // Fetch categories on component mount
+  useEffect(() => {
+    fetchCategories();
+  }, []);
+
+  // Reset page when filters change
+  useEffect(() => {
+    if (currentPage !== 1) {
+      setCurrentPage(1);
+    }
+  }, [debouncedSearchQuery, selectedCategory, selectedLevel, sortBy]);
+
+  // Fetch data on component mount and when filters change
+  useEffect(() => {
+    fetchCourses();
+  }, [currentPage, debouncedSearchQuery, selectedCategory, selectedLevel, sortBy]);
+
+  // Get courses and stats from response
+  const courses = coursesResponse?.data || [];
+  const pagination = coursesResponse?.pagination;
+  const apiStats = coursesResponse?.statistics;
+  const stats = {
+    totalCourses: pagination?.totalCount || 0,
+    totalStudents: apiStats?.totalStudents || 1250, // Fallback for demo
+    totalInstructors: apiStats?.totalInstructors || 25, // Fallback for demo
+    averageRating: apiStats?.averageTestimonialRating || 4.8 // Fallback for demo
+  };
+
+  // Since we're using API filtering, we don't need client-side filtering
+  const filteredAndSortedCourses = courses;
 
   const formatPrice = (price: number) => {
     return new Intl.NumberFormat('id-ID', {
@@ -92,11 +280,13 @@ export default function Courses() {
     return num.toString();
   };
 
-  const CourseCard = ({ course, isListView = false }: { course: any, isListView?: boolean }) => {
-    const category = categories.find(cat => cat.id === course.category);
+  // CourseCard Component
+  const CourseCard = ({ course, isListView }: { course: Course; isListView: boolean }) => {
+    const category = course.Category;
     const IconComponent = categoryIcons[category?.icon as keyof typeof categoryIcons];
 
     if (isListView) {
+      // List view
       return (
         <Card className="group hover:shadow-lg transition-all duration-300 bg-white dark:bg-slate-800 border-0 shadow-md">
           <CardContent className="p-0">
@@ -327,35 +517,37 @@ export default function Courses() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 dark:from-slate-900 dark:to-slate-800">
       {/* Hero Section */}
-      <section className="bg-gradient-to-r from-blue-600 to-purple-600 text-white py-20">
-        <div className="container mx-auto px-6">
-          <div className="text-center max-w-4xl mx-auto">
-            <h1 className="text-4xl md:text-6xl font-bold mb-6">
-              Katalog Kursus Lengkap
-            </h1>
-            <p className="text-xl md:text-2xl mb-8 text-blue-100">
-              Temukan kursus terbaik untuk mengembangkan skill dan karir Anda
-            </p>
-            
-            {/* Stats */}
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-3xl mx-auto">
-              {[
-                { label: "Total Kursus", value: stats.totalCourses, suffix: "+" },
-                { label: "Total Siswa", value: formatNumber(stats.totalStudents), suffix: "" },
-                { label: "Instruktur", value: stats.totalInstructors, suffix: "+" },
-                { label: "Jam Pembelajaran", value: stats.totalHours, suffix: "+" }
-              ].map((stat, i) => (
-                <div key={i} className="text-center">
-                  <div className="text-2xl md:text-3xl font-bold text-yellow-300 mb-1">
-                    {stat.value}{stat.suffix}
+      <div className="full-bleed">
+        <section className="bg-gradient-to-r from-blue-600 to-purple-600 text-white py-20">
+          <div className="container mx-auto px-6">
+            <div className="text-center max-w-4xl mx-auto">
+              <h1 className="text-4xl md:text-6xl font-bold mb-6">
+                Katalog Kursus Lengkap
+              </h1>
+              <p className="text-xl md:text-2xl mb-8 text-blue-100">
+                Temukan kursus terbaik untuk mengembangkan skill dan karir Anda
+              </p>
+              
+              {/* Stats */}
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-3xl mx-auto">
+                {[
+                  { label: "Total Kursus", value: stats.totalCourses, suffix: "+" },
+                  { label: "Total Siswa", value: formatNumber(stats.totalStudents), suffix: "" },
+                  { label: "Instruktur", value: stats.totalInstructors, suffix: "+" },
+                  { label: "Rating Rata-rata", value: stats.averageRating.toFixed(1), suffix: "/5" }
+                ].map((stat, i) => (
+                  <div key={i} className="text-center">
+                    <div className="text-2xl md:text-3xl font-bold text-yellow-300 mb-1">
+                      {stat.value}{stat.suffix}
+                    </div>
+                    <div className="text-sm text-blue-200">{stat.label}</div>
                   </div>
-                  <div className="text-sm text-blue-200">{stat.label}</div>
-                </div>
-              ))}
+                ))}
+              </div>
             </div>
           </div>
-        </div>
-      </section>
+        </section>
+      </div>
 
       {/* Search and Filters */}
       <section className="py-8 bg-white dark:bg-slate-800 shadow-sm sticky top-0 z-40">
@@ -371,6 +563,11 @@ export default function Courses() {
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="pl-10 h-12"
               />
+              {searchQuery !== debouncedSearchQuery && (
+                <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
+                  <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-blue-600"></div>
+                </div>
+              )}
             </div>
 
             {/* Filters - Desktop */}
@@ -381,7 +578,7 @@ export default function Courses() {
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="all">Semua Kategori</SelectItem>
-                  {categories.map(category => (
+                  {categoriesList.map(category => (
                     <SelectItem key={category.id} value={category.id}>
                       {category.name}
                     </SelectItem>
@@ -458,7 +655,7 @@ export default function Courses() {
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="all">Semua Kategori</SelectItem>
-                    {categories.map(category => (
+                    {categoriesList.map(category => (
                       <SelectItem key={category.id} value={category.id}>
                         {category.name}
                       </SelectItem>
@@ -507,7 +704,7 @@ export default function Courses() {
             >
               Semua Kategori
             </Button>
-            {categories.map(category => {
+            {categoriesList.map(category => {
               const IconComponent = categoryIcons[category.icon as keyof typeof categoryIcons];
               return (
                 <Button
@@ -528,10 +725,50 @@ export default function Courses() {
       {/* Results */}
       <section className="pb-20">
         <div className="container mx-auto px-6">
-          <div className="flex items-center justify-between mb-8">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-8 gap-4">
             <div className="text-lg text-gray-600 dark:text-gray-400">
-              Menampilkan {filteredAndSortedCourses.length} dari {courses.length} kursus
+              {pagination ? (
+                <span>
+                  Menampilkan {((pagination.page - 1) * pagination.limit) + 1}-{Math.min(pagination.page * pagination.limit, pagination.totalCount)} dari {pagination.totalCount} kursus
+                </span>
+              ) : (
+                <span>Menampilkan {filteredAndSortedCourses.length} kursus</span>
+              )}
             </div>
+            
+            {/* Active Filters */}
+            {(debouncedSearchQuery || selectedCategory !== 'all' || selectedLevel !== 'all') && (
+              <div className="flex items-center gap-2 flex-wrap">
+                <span className="text-sm text-gray-500">Filter aktif:</span>
+                {debouncedSearchQuery && (
+                  <Badge variant="secondary" className="text-xs">
+                    "{debouncedSearchQuery}"
+                  </Badge>
+                )}
+                {selectedCategory !== 'all' && (
+                  <Badge variant="secondary" className="text-xs">
+                    {categoriesList.find(cat => cat.id === selectedCategory)?.name || selectedCategory}
+                  </Badge>
+                )}
+                {selectedLevel !== 'all' && (
+                  <Badge variant="secondary" className="text-xs">
+                    {selectedLevel}
+                  </Badge>
+                )}
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => {
+                    setSearchQuery("");
+                    setSelectedCategory("all");
+                    setSelectedLevel("all");
+                  }}
+                  className="text-xs h-6 px-2"
+                >
+                  Reset
+                </Button>
+              </div>
+            )}
           </div>
 
           {/* Courses Grid/List */}
@@ -562,6 +799,56 @@ export default function Courses() {
                 setSelectedLevel("all");
               }}>
                 Reset Filter
+              </Button>
+            </div>
+          )}
+
+          {/* Pagination */}
+          {pagination && pagination.totalPages > 1 && (
+            <div className="flex items-center justify-center gap-2 mt-12">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setCurrentPage(currentPage - 1)}
+                disabled={!pagination.hasPrevPage}
+                className="flex items-center gap-2"
+              >
+                <ChevronLeft className="h-4 w-4" />
+                Sebelumnya
+              </Button>
+              
+              <div className="flex items-center gap-2">
+                {Array.from({ length: Math.min(5, pagination.totalPages) }, (_, i) => {
+                  const pageNum = Math.max(1, Math.min(
+                    pagination.totalPages - 4,
+                    Math.max(1, currentPage - 2)
+                  )) + i;
+                  
+                  if (pageNum > pagination.totalPages) return null;
+                  
+                  return (
+                    <Button
+                      key={pageNum}
+                      variant={currentPage === pageNum ? "default" : "outline"}
+                      size="sm"
+                      onClick={() => setCurrentPage(pageNum)}
+                      className="w-10 h-10"
+                    >
+                      {pageNum}
+                    </Button>
+                  );
+                })}
+              </div>
+              
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setCurrentPage(currentPage + 1)}
+                disabled={!pagination.hasNextPage}
+                className="flex items-center gap-2"
+              >
+                Selanjutnya
+                <ChevronRight className="h-4 w-4" />
               </Button>
             </div>
           )}

@@ -43,7 +43,62 @@ import {
 import { toast } from 'sonner';
 import { useCart } from '@/contexts/CartContext';
 import { useWishlist } from '@/contexts/WishlistContext';
-import coursesData from '@/data/courses.json';
+import { Skeleton } from '@/components/ui/skeleton';
+import { isServer } from '@tanstack/react-query';
+
+// TypeScript interfaces
+interface Category {
+  id: string;
+  name: string;
+  description: string;
+  icon: string;
+  color: string;
+}
+
+interface Course {
+  id: string;
+  title: string;
+  slug: string;
+  description: string;
+  thumbnail: string;
+  price: number;
+  originalPrice: number;
+  discount: number;
+  level: string;
+  language: string;
+  duration: string;
+  lessons: number;
+  students: number;
+  rating: number;
+  reviews: number;
+  featured: boolean;
+  bestseller: boolean;
+  certificate: boolean;
+  skills: string[];
+  categoryId: string;
+  lastUpdated: string;
+  createdAt: string;
+  updatedAt: string;
+  tenantId: string;
+  instructor: {
+    name: string;
+    title: string;
+    avatar: string;
+  };
+  features: string[];
+  requirements: string[];
+  curriculum: Array<{
+    week: number;
+    topic: string;
+  }>;
+  Category: Category;
+}
+
+interface CourseDetailResponse {
+  success: boolean;
+  data: Course;
+  message: string;
+}
 
 interface CourseDetailProps {}
 
@@ -56,38 +111,121 @@ const CourseDetail: React.FC<CourseDetailProps> = () => {
   const [showPreview, setShowPreview] = useState(false);
   const [showShareMenu, setShowShareMenu] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
-  const [course, setCourse] = useState<any>(null);
+  const [course, setCourse] = useState<Course | null>(null);
   const [error, setError] = useState<string | null>(null);
 
-  // Load course data
-  useEffect(() => {
-    const loadCourse = () => {
-      try {
-        setIsLoading(true);
-        const foundCourse = coursesData.courses.find((c: any) => c.id === courseId);
-        if (!foundCourse) {
-          setError('Kursus tidak ditemukan');
-        } else {
-          setCourse(foundCourse);
+  // API Fetching Function
+  const fetchCourse = async () => {
+    try {
+      setIsLoading(true);
+      setError(null);
+      
+      const baseUrl = isServer
+        ? process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000/api/"
+        : "http://localhost:3000/api/";
+      const tenantId = isServer
+        ? process.env.NEXT_TENANT_ID || "tenant-1"
+        : "tenant-1";
+      
+      const response = await fetch(`${baseUrl}courses/${courseId}`, {
+        method: "GET",
+        headers: {
+          "x-tenant-id": tenantId,
+          "Content-Type": "application/json",
+        },
+        referrerPolicy: 'strict-origin-when-cross-origin',
+        cache: "no-store",
+      });
+      
+      if (!response.ok) {
+        if (response.status === 404) {
+          throw new Error('Kursus tidak ditemukan');
         }
-      } catch (err) {
-        console.error('Error loading course:', err);
-        setError('Terjadi kesalahan saat memuat data kursus');
-      } finally {
-        setIsLoading(false);
+        throw new Error('Gagal memuat data kursus');
       }
-    };
+      
+      const data: CourseDetailResponse = await response.json();
+      setCourse(data.data);
+      
+    } catch (err: any) {
+      console.error('Error fetching course:', err);
+      setError(err.message || 'Terjadi kesalahan saat memuat data kursus');
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
-    loadCourse();
+  // Load course data on component mount and when courseId changes
+  useEffect(() => {
+    if (courseId) {
+      fetchCourse();
+    }
   }, [courseId]);
 
-  // Show loading state
+  // Loading state
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 p-6 flex items-center justify-center">
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 dark:from-slate-900 dark:to-slate-800">
+        <div className="container mx-auto px-6 py-20">
+          <div className="max-w-4xl mx-auto">
+            <Skeleton className="h-8 w-32 mb-6" />
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+              <div className="lg:col-span-2 space-y-6">
+                <Skeleton className="h-64 w-full rounded-lg" />
+                <Skeleton className="h-8 w-3/4" />
+                <Skeleton className="h-4 w-full" />
+                <Skeleton className="h-4 w-2/3" />
+              </div>
+              <div className="space-y-4">
+                <Skeleton className="h-48 w-full rounded-lg" />
+                <Skeleton className="h-12 w-full" />
+                <Skeleton className="h-12 w-full" />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Error state
+  if (error) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 dark:from-slate-900 dark:to-slate-800 flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500 mx-auto mb-4"></div>
-          <p className="text-gray-600">Memuat data kursus...</p>
+          <div className="bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 p-6 rounded-lg inline-block mb-4">
+            <BookOpen className="h-12 w-12 mx-auto mb-4" />
+            <p className="text-lg font-semibold mb-2">Gagal Memuat Kursus</p>
+            <p>{error}</p>
+          </div>
+          <div className="space-x-4">
+            <Button onClick={fetchCourse} className="mt-4">
+              Coba Lagi
+            </Button>
+            <Button variant="outline" onClick={() => navigate('/courses')} className="mt-4">
+              Kembali ke Daftar Kursus
+            </Button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // No course found
+  if (!course) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 dark:from-slate-900 dark:to-slate-800 flex items-center justify-center">
+        <div className="text-center">
+          <BookOpen className="h-16 w-16 text-gray-400 mx-auto mb-4" />
+          <h3 className="text-xl font-semibold text-gray-600 dark:text-gray-400 mb-2">
+            Kursus tidak ditemukan
+          </h3>
+          <p className="text-gray-500 dark:text-gray-500 mb-6">
+            Kursus yang Anda cari tidak tersedia atau telah dihapus
+          </p>
+          <Button onClick={() => navigate('/courses')}>
+            Kembali ke Daftar Kursus
+          </Button>
         </div>
       </div>
     );
@@ -117,16 +255,26 @@ const CourseDetail: React.FC<CourseDetailProps> = () => {
 
   // This check is now handled in the error state above
 
+  // Utility functions
   const formatPrice = (price: number) => {
     return new Intl.NumberFormat('id-ID', {
       style: 'currency',
-      currency: 'IDR'
+      currency: 'IDR',
+      minimumFractionDigits: 0,
     }).format(price);
   };
 
-  const discount = course.originalPrice 
+  const formatNumber = (num: number) => {
+    if (num >= 1000) {
+      return (num / 1000).toFixed(1) + 'k';
+    }
+    return num.toString();
+  };
+
+  // Calculate discount percentage
+  const discount = course.discount || (course.originalPrice && course.originalPrice > course.price 
     ? Math.round(((course.originalPrice - course.price) / course.originalPrice) * 100)
-    : 0;
+    : 0);
 
   // Button handlers
   const handleBuyNow = () => {
@@ -138,9 +286,9 @@ const CourseDetail: React.FC<CourseDetailProps> = () => {
       originalPrice: course.originalPrice,
       thumbnail: course.thumbnail,
       instructor: course.instructor.name,
-      duration: course.duration || 'Lifetime access',
-      level: course.level || 'All Levels',
-      category: course.category
+      duration: course.duration,
+      level: course.level,
+      category: course.Category?.name || 'Uncategorized'
     };
     addToCart(cartItem);
     toast.success('Kursus ditambahkan ke keranjang!');
@@ -155,9 +303,9 @@ const CourseDetail: React.FC<CourseDetailProps> = () => {
       originalPrice: course.originalPrice,
       thumbnail: course.thumbnail,
       instructor: course.instructor.name,
-      duration: course.duration || 'Lifetime access',
-      level: course.level || 'All Levels',
-      category: course.category
+      duration: course.duration,
+      level: course.level,
+      category: course.Category?.name || 'Uncategorized'
     };
     addToCart(cartItem);
     toast.success('Kursus berhasil ditambahkan ke keranjang!');
@@ -166,6 +314,7 @@ const CourseDetail: React.FC<CourseDetailProps> = () => {
   const handleWishlist = () => {
     if (isInWishlist(course.id)) {
       removeFromWishlist(course.id);
+      toast.success('Kursus dihapus dari wishlist');
     } else {
       const wishlistItem = {
         id: course.id,
@@ -174,13 +323,14 @@ const CourseDetail: React.FC<CourseDetailProps> = () => {
         price: course.price,
         originalPrice: course.originalPrice,
         instructor: course.instructor.name,
-        duration: course.duration || 'Lifetime access',
-        level: course.level || 'All Levels',
-        category: course.category,
+        duration: course.duration,
+        level: course.level,
+        category: course.Category?.name || 'Uncategorized',
         rating: course.rating,
-        studentsCount: course.studentsCount
+        studentsCount: course.students
       };
       addToWishlist(wishlistItem);
+      toast.success('Kursus ditambahkan ke wishlist');
     }
   };
 
@@ -589,7 +739,7 @@ const CourseDetail: React.FC<CourseDetailProps> = () => {
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
-                  {/* Mock curriculum sections */}
+                  {/* Mock curriculum sections */}``
                   {[
                     {
                       title: "Pengenalan dan Setup",
