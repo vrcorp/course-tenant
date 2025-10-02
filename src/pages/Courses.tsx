@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -121,6 +121,75 @@ const categoryIcons: { [key: string]: any } = {
 };
 
 export default function Courses() {
+  // Add CSS animations
+  React.useEffect(() => {
+    const style = document.createElement('style');
+    style.textContent = `
+      @keyframes fade-in {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      
+      @keyframes bounce-in {
+        0% {
+          opacity: 0;
+          transform: scale(0.3);
+        }
+        50% {
+          opacity: 1;
+          transform: scale(1.05);
+        }
+        70% {
+          transform: scale(0.9);
+        }
+        100% {
+          opacity: 1;
+          transform: scale(1);
+        }
+      }
+      
+      @keyframes shimmer {
+        0% {
+          background-position: -200px 0;
+        }
+        100% {
+          background-position: calc(200px + 100%) 0;
+        }
+      }
+      
+      .animate-fade-in {
+        animation: fade-in 0.6s ease-out forwards;
+        opacity: 0;
+      }
+      
+      .animate-bounce-in {
+        animation: bounce-in 0.8s ease-out forwards;
+        opacity: 0;
+      }
+      
+      .animate-shimmer {
+        background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+        background-size: 200px 100%;
+        animation: shimmer 1.5s infinite;
+      }
+      
+      .dark .animate-shimmer {
+        background: linear-gradient(90deg, #374151 25%, #4b5563 50%, #374151 75%);
+        background-size: 200px 100%;
+      }
+    `;
+    document.head.appendChild(style);
+    
+    return () => {
+      document.head.removeChild(style);
+    };
+  }, []);
   // API Data State
   const [coursesResponse, setCoursesResponse] = useState<CoursesResponse | null>(null);
   const [categoriesList, setCategoriesList] = useState<Category[]>([]);
@@ -280,6 +349,102 @@ export default function Courses() {
     return num.toString();
   };
 
+  // Loading Skeleton Components
+  const CourseCardSkeleton = ({ isListView }: { isListView: boolean }) => {
+    if (isListView) {
+      return (
+        <Card className="bg-white dark:bg-slate-800 border-0 shadow-md overflow-hidden">
+          <CardContent className="p-0">
+            <div className="flex flex-col md:flex-row">
+              {/* Image Skeleton */}
+              <div className="md:w-80 h-48 md:h-auto bg-gray-200 dark:bg-gray-700 animate-shimmer" />
+              
+              {/* Content Skeleton */}
+              <div className="flex-1 p-6 space-y-4">
+                <div className="h-4 w-24 bg-gray-200 dark:bg-gray-700 rounded animate-shimmer" />
+                <div className="h-6 w-3/4 bg-gray-200 dark:bg-gray-700 rounded animate-shimmer" />
+                <div className="h-4 w-full bg-gray-200 dark:bg-gray-700 rounded animate-shimmer" />
+                <div className="h-4 w-2/3 bg-gray-200 dark:bg-gray-700 rounded animate-shimmer" />
+                
+                <div className="flex items-center gap-3">
+                  <div className="h-10 w-10 bg-gray-200 dark:bg-gray-700 rounded-full animate-shimmer" />
+                  <div className="space-y-2">
+                    <div className="h-3 w-20 bg-gray-200 dark:bg-gray-700 rounded animate-shimmer" />
+                    <div className="h-3 w-16 bg-gray-200 dark:bg-gray-700 rounded animate-shimmer" />
+                  </div>
+                </div>
+                
+                <div className="flex gap-4">
+                  <div className="h-4 w-16 bg-gray-200 dark:bg-gray-700 rounded animate-shimmer" />
+                  <div className="h-4 w-20 bg-gray-200 dark:bg-gray-700 rounded animate-shimmer" />
+                  <div className="h-4 w-18 bg-gray-200 dark:bg-gray-700 rounded animate-shimmer" />
+                </div>
+                
+                <div className="flex justify-between items-center">
+                  <div className="h-6 w-16 bg-gray-200 dark:bg-gray-700 rounded animate-shimmer" />
+                  <div className="h-8 w-24 bg-gray-200 dark:bg-gray-700 rounded animate-shimmer" />
+                </div>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      );
+    }
+
+    return (
+      <Card className="bg-white dark:bg-slate-800 border-0 shadow-lg overflow-hidden">
+        <div className="w-full h-48 bg-gray-200 dark:bg-gray-700 animate-shimmer" />
+        <CardContent className="p-6 space-y-4">
+          <div className="h-4 w-20 bg-gray-200 dark:bg-gray-700 rounded animate-shimmer" />
+          <div className="h-6 w-full bg-gray-200 dark:bg-gray-700 rounded animate-shimmer" />
+          <div className="flex items-center gap-3">
+            <div className="h-8 w-8 bg-gray-200 dark:bg-gray-700 rounded-full animate-shimmer" />
+            <div className="h-4 w-24 bg-gray-200 dark:bg-gray-700 rounded animate-shimmer" />
+          </div>
+          <div className="flex gap-4">
+            <div className="h-4 w-16 bg-gray-200 dark:bg-gray-700 rounded animate-shimmer" />
+            <div className="h-4 w-12 bg-gray-200 dark:bg-gray-700 rounded animate-shimmer" />
+            <div className="h-4 w-14 bg-gray-200 dark:bg-gray-700 rounded animate-shimmer" />
+          </div>
+          <div className="h-6 w-16 bg-gray-200 dark:bg-gray-700 rounded animate-shimmer" />
+          <div className="flex justify-between items-center">
+            <div className="h-8 w-20 bg-gray-200 dark:bg-gray-700 rounded animate-shimmer" />
+            <div className="h-4 w-16 bg-gray-200 dark:bg-gray-700 rounded animate-shimmer" />
+          </div>
+        </CardContent>
+      </Card>
+    );
+  };
+
+  const CategorySkeleton = () => (
+    <div className="flex flex-wrap gap-3 justify-center">
+      {Array.from({ length: 6 }).map((_, i) => (
+        <div 
+          key={i} 
+          className="h-10 w-32 bg-gray-200 dark:bg-gray-700 rounded-full animate-shimmer"
+          style={{ animationDelay: `${i * 0.1}s` }}
+        />
+      ))}
+    </div>
+  );
+
+  const StatsSkeleton = () => (
+    <div className="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-3xl mx-auto">
+      {Array.from({ length: 4 }).map((_, i) => (
+        <div key={i} className="text-center">
+          <div 
+            className="h-8 w-16 bg-gray-200 dark:bg-gray-700 rounded mx-auto mb-2 animate-shimmer"
+            style={{ animationDelay: `${i * 0.1}s` }}
+          />
+          <div 
+            className="h-4 w-20 bg-gray-200 dark:bg-gray-700 rounded mx-auto animate-shimmer"
+            style={{ animationDelay: `${i * 0.1 + 0.1}s` }}
+          />
+        </div>
+      ))}
+    </div>
+  );
+
   // CourseCard Component
   const CourseCard = ({ course, isListView }: { course: Course; isListView: boolean }) => {
     const category = course.Category;
@@ -340,6 +505,24 @@ export default function Courses() {
                   <p className="text-gray-600 dark:text-gray-400 mb-4 line-clamp-2">
                     {course.description}
                   </p>
+
+                  <CardContent>
+                    <div className="space-y-4">
+                      {course.faqs && course.faqs.length > 0 ? (
+                        course.faqs.map((faq, index) => (
+                          <div key={faq.id} className="border rounded-lg p-4">
+                            <h3 className="font-semibold mb-2">{faq.question}</h3>
+                            <p className="text-gray-700">{faq.answer}</p>
+                          </div>
+                        ))
+                      ) : (
+                        <div className="text-center py-8 text-gray-500">
+                          <MessageCircle className="h-12 w-12 mx-auto mb-4 opacity-50" />
+                          <p>FAQ akan segera tersedia</p>
+                        </div>
+                      )}
+                    </div>
+                  </CardContent>
 
                   {/* Instructor */}
                   <div className="flex items-center gap-3 mb-4">
@@ -530,19 +713,23 @@ export default function Courses() {
               
               {/* Stats */}
               <div className="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-3xl mx-auto">
-                {[
-                  { label: "Total Kursus", value: stats.totalCourses, suffix: "+" },
-                  { label: "Total Siswa", value: formatNumber(stats.totalStudents), suffix: "" },
-                  { label: "Instruktur", value: stats.totalInstructors, suffix: "+" },
-                  { label: "Rating Rata-rata", value: stats.averageRating.toFixed(1), suffix: "/5" }
-                ].map((stat, i) => (
-                  <div key={i} className="text-center">
-                    <div className="text-2xl md:text-3xl font-bold text-yellow-300 mb-1">
-                      {stat.value}{stat.suffix}
+                {loading ? (
+                  <StatsSkeleton />
+                ) : (
+                  [
+                    { label: "Total Kursus", value: stats.totalCourses, suffix: "+" },
+                    { label: "Total Siswa", value: formatNumber(stats.totalStudents), suffix: "" },
+                    { label: "Instruktur", value: stats.totalInstructors, suffix: "+" },
+                    { label: "Rating Rata-rata", value: stats.averageRating.toFixed(1), suffix: "/5" }
+                  ].map((stat, i) => (
+                    <div key={i} className="text-center animate-fade-in" style={{ animationDelay: `${i * 0.1}s` }}>
+                      <div className="text-2xl md:text-3xl font-bold text-yellow-300 mb-1 animate-bounce-in" style={{ animationDelay: `${i * 0.1 + 0.2}s` }}>
+                        {stat.value}{stat.suffix}
+                      </div>
+                      <div className="text-sm text-blue-200">{stat.label}</div>
                     </div>
-                    <div className="text-sm text-blue-200">{stat.label}</div>
-                  </div>
-                ))}
+                  ))
+                )}
               </div>
             </div>
           </div>
@@ -696,29 +883,34 @@ export default function Courses() {
       {/* Categories */}
       <section className="py-8">
         <div className="container mx-auto px-6">
-          <div className="flex flex-wrap gap-3 justify-center">
-            <Button
-              variant={selectedCategory === "all" ? "default" : "outline"}
-              onClick={() => setSelectedCategory("all")}
-              className="rounded-full"
-            >
-              Semua Kategori
-            </Button>
-            {categoriesList.map(category => {
-              const IconComponent = categoryIcons[category.icon as keyof typeof categoryIcons];
-              return (
-                <Button
-                  key={category.id}
-                  variant={selectedCategory === category.id ? "default" : "outline"}
-                  onClick={() => setSelectedCategory(category.id)}
-                  className="rounded-full"
-                >
-                  {IconComponent && <IconComponent className="h-4 w-4 mr-2" />}
-                  {category.name}
-                </Button>
-              );
-            })}
-          </div>
+          {categoriesList.length === 0 ? (
+            <CategorySkeleton />
+          ) : (
+            <div className="flex flex-wrap gap-3 justify-center">
+              <Button
+                variant={selectedCategory === "all" ? "default" : "outline"}
+                onClick={() => setSelectedCategory("all")}
+                className="rounded-full animate-fade-in"
+              >
+                Semua Kategori
+              </Button>
+              {categoriesList.map((category, index) => {
+                const IconComponent = categoryIcons[category.icon as keyof typeof categoryIcons];
+                return (
+                  <Button
+                    key={category.id}
+                    variant={selectedCategory === category.id ? "default" : "outline"}
+                    onClick={() => setSelectedCategory(category.id)}
+                    className="rounded-full animate-fade-in"
+                    style={{ animationDelay: `${(index + 1) * 0.1}s` }}
+                  >
+                    {IconComponent && <IconComponent className="h-4 w-4 mr-2" />}
+                    {category.name}
+                  </Button>
+                );
+              })}
+            </div>
+          )}
         </div>
       </section>
 
@@ -727,12 +919,14 @@ export default function Courses() {
         <div className="container mx-auto px-6">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-8 gap-4">
             <div className="text-lg text-gray-600 dark:text-gray-400">
-              {pagination ? (
-                <span>
+              {loading ? (
+                <div className="h-6 w-48 bg-gray-200 dark:bg-gray-700 rounded animate-shimmer" />
+              ) : pagination ? (
+                <span className="animate-fade-in">
                   Menampilkan {((pagination.page - 1) * pagination.limit) + 1}-{Math.min(pagination.page * pagination.limit, pagination.totalCount)} dari {pagination.totalCount} kursus
                 </span>
               ) : (
-                <span>Menampilkan {filteredAndSortedCourses.length} kursus</span>
+                <span className="animate-fade-in">Menampilkan {filteredAndSortedCourses.length} kursus</span>
               )}
             </div>
             
@@ -772,20 +966,46 @@ export default function Courses() {
           </div>
 
           {/* Courses Grid/List */}
-          {filteredAndSortedCourses.length > 0 ? (
+          {loading ? (
             <div className={
               viewMode === "grid" 
                 ? "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
                 : "space-y-6"
             }>
-              {filteredAndSortedCourses.map((course) => (
+              {Array.from({ length: pageSize }).map((_, index) => (
+                <CourseCardSkeleton key={index} isListView={viewMode === "list"} />
+              ))}
+            </div>
+          ) : error ? (
+            <div className="text-center py-20">
+              <div className="bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 p-6 rounded-lg inline-block mb-4">
+                <BookOpen className="h-12 w-12 mx-auto mb-4" />
+                <h3 className="text-xl font-semibold mb-2">Gagal Memuat Data</h3>
+                <p>{error}</p>
+              </div>
+              <Button onClick={fetchCourses} className="mt-4">
+                Coba Lagi
+              </Button>
+            </div>
+          ) : filteredAndSortedCourses.length > 0 ? (
+            <div className={
+              viewMode === "grid" 
+                ? "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
+                : "space-y-6"
+            }>
+              {filteredAndSortedCourses.map((course, index) => (
                 <Link key={course.id} to={`/course/${course.slug}`}>
-                  <CourseCard course={course} isListView={viewMode === "list"} />
+                  <div 
+                    className="animate-fade-in" 
+                    style={{ animationDelay: `${index * 0.05}s` }}
+                  >
+                    <CourseCard course={course} isListView={viewMode === "list"} />
+                  </div>
                 </Link>
               ))}
             </div>
           ) : (
-            <div className="text-center py-20">
+            <div className="text-center py-20 animate-fade-in">
               <BookOpen className="h-16 w-16 text-gray-400 mx-auto mb-4" />
               <h3 className="text-xl font-semibold text-gray-600 dark:text-gray-400 mb-2">
                 Tidak ada kursus ditemukan

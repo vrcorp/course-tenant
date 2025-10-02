@@ -55,6 +55,70 @@ interface Category {
   color: string;
 }
 
+interface Instructor {
+  id: string;
+  name: string;
+  email: string;
+  avatar: string;
+  specialization: string;
+  coursesCount: number;
+  students: number;
+  rating: number;
+  status: string;
+  joinDate: string;
+  role?: string;
+  title?: string;
+}
+
+interface Lesson {
+  id: string;
+  title: string;
+  duration: string;
+  content: string;
+  type: string;
+  order: number;
+}
+
+interface Section {
+  id: string;
+  title: string;
+  order: number;
+  lessons: Lesson[];
+}
+
+interface Testimonial {
+  id: string;
+  name: string;
+  title: string;
+  avatar: string;
+  quote: string;
+  rating: number;
+  user: {
+    id: string;
+    name: string;
+    avatar: string;
+  };
+}
+
+interface FAQ {
+  id: string;
+  question: string;
+  answer: string;
+  category: string;
+  order: number;
+}
+
+interface CourseStats {
+  totalSections: number;
+  totalLessons: number;
+  totalTestimonials: number;
+  averageTestimonialRating: number;
+  totalQuizzes: number;
+  totalFaqs: number;
+  totalInstructors: number;
+  totalCategories: number;
+}
+
 interface Course {
   id: string;
   title: string;
@@ -64,34 +128,32 @@ interface Course {
   price: number;
   originalPrice: number;
   discount: number;
+  affiliateFee: number;
   level: string;
   language: string;
   duration: string;
   lessons: number;
   students: number;
   rating: number;
-  reviews: number;
+  lastUpdated: string;
+  certificate: boolean;
   featured: boolean;
   bestseller: boolean;
-  certificate: boolean;
-  skills: string[];
-  categoryId: string;
-  lastUpdated: string;
   createdAt: string;
   updatedAt: string;
-  tenantId: string;
-  instructor: {
-    name: string;
-    title: string;
-    avatar: string;
-  };
-  features: string[];
-  requirements: string[];
-  curriculum: Array<{
-    week: number;
-    topic: string;
-  }>;
+  categories: Category[];
   Category: Category;
+  instructors: Instructor[];
+  instructor: Instructor;
+  features: string[];
+  skills: string[];
+  requirements: string[];
+  curriculum: any[];
+  sections: Section[];
+  testimonials: Testimonial[];
+  quizzes: any[];
+  faqs: FAQ[];
+  stats: CourseStats;
 }
 
 interface CourseDetailResponse {
@@ -103,6 +165,99 @@ interface CourseDetailResponse {
 interface CourseDetailProps {}
 
 const CourseDetail: React.FC<CourseDetailProps> = () => {
+  // Add CSS animations
+  React.useEffect(() => {
+    const style = document.createElement('style');
+    style.textContent = `
+      @keyframes fade-in {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      
+      @keyframes slide-in-left {
+        from {
+          opacity: 0;
+          transform: translateX(-30px);
+        }
+        to {
+          opacity: 1;
+          transform: translateX(0);
+        }
+      }
+      
+      @keyframes slide-in-right {
+        from {
+          opacity: 0;
+          transform: translateX(30px);
+        }
+        to {
+          opacity: 1;
+          transform: translateX(0);
+        }
+      }
+      
+      @keyframes shimmer {
+        0% {
+          background-position: -200px 0;
+        }
+        100% {
+          background-position: calc(200px + 100%) 0;
+        }
+      }
+      
+      @keyframes pulse-scale {
+        0%, 100% {
+          transform: scale(1);
+          opacity: 1;
+        }
+        50% {
+          transform: scale(1.05);
+          opacity: 0.8;
+        }
+      }
+      
+      .animate-fade-in {
+        animation: fade-in 0.6s ease-out forwards;
+        opacity: 0;
+      }
+      
+      .animate-slide-in-left {
+        animation: slide-in-left 0.6s ease-out forwards;
+        opacity: 0;
+      }
+      
+      .animate-slide-in-right {
+        animation: slide-in-right 0.6s ease-out forwards;
+        opacity: 0;
+      }
+      
+      .animate-shimmer {
+        background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+        background-size: 200px 100%;
+        animation: shimmer 1.5s infinite;
+      }
+      
+      .animate-pulse-scale {
+        animation: pulse-scale 2s ease-in-out infinite;
+      }
+      
+      .dark .animate-shimmer {
+        background: linear-gradient(90deg, #374151 25%, #4b5563 50%, #374151 75%);
+        background-size: 200px 100%;
+      }
+    `;
+    document.head.appendChild(style);
+    
+    return () => {
+      document.head.removeChild(style);
+    };
+  }, []);
   const { courseId } = useParams<{ courseId: string }>();
   const navigate = useNavigate();
   const { addToCart } = useCart();
@@ -162,28 +317,108 @@ const CourseDetail: React.FC<CourseDetailProps> = () => {
     }
   }, [courseId]);
 
-  // Loading state
-  if (isLoading) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 dark:from-slate-900 dark:to-slate-800">
-        <div className="container mx-auto px-6 py-20">
-          <div className="max-w-4xl mx-auto">
-            <Skeleton className="h-8 w-32 mb-6" />
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-              <div className="lg:col-span-2 space-y-6">
-                <Skeleton className="h-64 w-full rounded-lg" />
-                <Skeleton className="h-8 w-3/4" />
-                <Skeleton className="h-4 w-full" />
-                <Skeleton className="h-4 w-2/3" />
+  // Skeleton Components
+  const HeaderSkeleton = () => (
+    <div className="bg-gradient-to-r from-blue-900 to-purple-900 text-white">
+      <div className="max-w-7xl mx-auto p-6">
+        <div className="flex items-center gap-4 mb-6">
+          <div className="h-10 w-24 bg-white/20 rounded animate-shimmer" />
+          <div className="h-4 w-32 bg-white/20 rounded animate-shimmer" />
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          <div className="lg:col-span-2 space-y-6">
+            <div className="space-y-4">
+              <div className="flex gap-2">
+                <div className="h-6 w-20 bg-white/20 rounded animate-shimmer" />
+                <div className="h-6 w-24 bg-white/20 rounded animate-shimmer" />
               </div>
-              <div className="space-y-4">
-                <Skeleton className="h-48 w-full rounded-lg" />
-                <Skeleton className="h-12 w-full" />
-                <Skeleton className="h-12 w-full" />
+              <div className="h-12 w-3/4 bg-white/20 rounded animate-shimmer" />
+              <div className="h-6 w-full bg-white/20 rounded animate-shimmer" />
+              <div className="h-6 w-2/3 bg-white/20 rounded animate-shimmer" />
+              
+              <div className="flex gap-6">
+                <div className="h-4 w-24 bg-white/20 rounded animate-shimmer" />
+                <div className="h-4 w-20 bg-white/20 rounded animate-shimmer" />
+                <div className="h-4 w-16 bg-white/20 rounded animate-shimmer" />
+              </div>
+            </div>
+
+            <div className="flex items-center gap-4 bg-white/10 rounded-lg p-4">
+              <div className="w-16 h-16 bg-white/20 rounded-full animate-shimmer" />
+              <div className="space-y-2 flex-1">
+                <div className="h-5 w-48 bg-white/20 rounded animate-shimmer" />
+                <div className="h-4 w-32 bg-white/20 rounded animate-shimmer" />
+                <div className="h-3 w-40 bg-white/20 rounded animate-shimmer" />
+              </div>
+            </div>
+          </div>
+
+          <div className="lg:col-span-1">
+            <div className="bg-white dark:bg-slate-800 rounded-lg overflow-hidden">
+              <div className="h-48 bg-gray-200 dark:bg-gray-700 animate-shimmer" />
+              <div className="p-6 space-y-4">
+                <div className="text-center space-y-2">
+                  <div className="h-8 w-32 bg-gray-200 dark:bg-gray-700 rounded mx-auto animate-shimmer" />
+                  <div className="h-6 w-24 bg-gray-200 dark:bg-gray-700 rounded mx-auto animate-shimmer" />
+                </div>
+                <div className="space-y-3">
+                  <div className="h-12 w-full bg-gray-200 dark:bg-gray-700 rounded animate-shimmer" />
+                  <div className="h-12 w-full bg-gray-200 dark:bg-gray-700 rounded animate-shimmer" />
+                  <div className="flex gap-2">
+                    <div className="h-10 flex-1 bg-gray-200 dark:bg-gray-700 rounded animate-shimmer" />
+                    <div className="h-10 flex-1 bg-gray-200 dark:bg-gray-700 rounded animate-shimmer" />
+                  </div>
+                </div>
               </div>
             </div>
           </div>
         </div>
+      </div>
+    </div>
+  );
+
+  const TabsSkeleton = () => (
+    <div className="max-w-7xl mx-auto p-6 space-y-6">
+      <div className="h-12 w-full bg-gray-200 dark:bg-gray-700 rounded animate-shimmer" />
+      
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div className="lg:col-span-2 space-y-6">
+          {Array.from({ length: 3 }).map((_, i) => (
+            <div key={i} className="bg-white dark:bg-slate-800 rounded-lg p-6 space-y-4">
+              <div className="h-6 w-48 bg-gray-200 dark:bg-gray-700 rounded animate-shimmer" style={{ animationDelay: `${i * 0.1}s` }} />
+              <div className="space-y-2">
+                <div className="h-4 w-full bg-gray-200 dark:bg-gray-700 rounded animate-shimmer" style={{ animationDelay: `${i * 0.1 + 0.1}s` }} />
+                <div className="h-4 w-3/4 bg-gray-200 dark:bg-gray-700 rounded animate-shimmer" style={{ animationDelay: `${i * 0.1 + 0.2}s` }} />
+                <div className="h-4 w-1/2 bg-gray-200 dark:bg-gray-700 rounded animate-shimmer" style={{ animationDelay: `${i * 0.1 + 0.3}s` }} />
+              </div>
+            </div>
+          ))}
+        </div>
+        
+        <div className="space-y-6">
+          <div className="bg-white dark:bg-slate-800 rounded-lg p-6 space-y-4">
+            <div className="h-6 w-32 bg-gray-200 dark:bg-gray-700 rounded animate-shimmer" />
+            {Array.from({ length: 6 }).map((_, i) => (
+              <div key={i} className="flex justify-between items-center">
+                <div className="h-4 w-20 bg-gray-200 dark:bg-gray-700 rounded animate-shimmer" style={{ animationDelay: `${i * 0.05}s` }} />
+                <div className="h-4 w-16 bg-gray-200 dark:bg-gray-700 rounded animate-shimmer" style={{ animationDelay: `${i * 0.05 + 0.1}s` }} />
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+
+  // Loading state
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 dark:from-slate-900 dark:to-slate-800">
+        <div className="full-bleed">
+          <HeaderSkeleton />
+        </div>
+        <TabsSkeleton />
       </div>
     );
   }
@@ -379,7 +614,7 @@ const CourseDetail: React.FC<CourseDetailProps> = () => {
       <div className="full-bleed">
         <div className="bg-gradient-to-r from-blue-900 to-purple-900 text-white">
           <div className="max-w-7xl mx-auto p-6">
-            <div className="flex items-center gap-4 mb-6">
+            <div className="flex items-center gap-4 mb-6 animate-fade-in">
               <Link to="/courses">
                 <Button variant="ghost" size="sm" className="text-white hover:bg-white/20">
                   <ArrowLeft className="h-4 w-4 mr-2" />
@@ -389,13 +624,13 @@ const CourseDetail: React.FC<CourseDetailProps> = () => {
               <div className="flex items-center gap-2 text-sm opacity-80">
                 <span>Kursus</span>
                 <span>•</span>
-                <span>{course.category}</span>
+                <span>{course.Category?.name}</span>
               </div>
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
               {/* Course Info */}
-              <div className="lg:col-span-2 space-y-6">
+              <div className="lg:col-span-2 space-y-6 animate-slide-in-left" style={{ animationDelay: '0.2s' }}>
                 <div>
                   <div className="flex flex-wrap gap-2 mb-4">
                     {course.featured && (
@@ -418,15 +653,15 @@ const CourseDetail: React.FC<CourseDetailProps> = () => {
                           <Star
                             key={star}
                             className={`h-4 w-4 ${
-                              star <= course.rating
+                              star <= (course.rating || 0)
                                 ? 'fill-yellow-400 text-yellow-400'
                                 : 'text-gray-300'
                             }`}
                           />
                         ))}
                       </div>
-                      <span className="font-medium">{course.rating}</span>
-                      <span className="opacity-80">({course.reviews} ulasan)</span>
+                      <span className="font-medium">{course.rating || 'Belum ada rating'}</span>
+                      <span className="opacity-80">({course.testimonials?.length || 0} ulasan)</span>
                     </div>
                     
                     <div className="flex items-center gap-2 opacity-80">
@@ -459,13 +694,14 @@ const CourseDetail: React.FC<CourseDetailProps> = () => {
                       <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
                       <span>{course.instructor.rating} rating instruktur</span>
                     </div>
-                    <p className="text-blue-100 text-sm">{course.instructor.bio}</p>
+                    <p className="text-blue-100 text-sm">{course.instructor.specialization}</p>
+                    <p className="text-blue-100 text-xs">{course.instructor.coursesCount} kursus • {formatNumber(course.instructor.students)} siswa</p>
                   </div>
                 </div>
               </div>
 
               {/* Purchase Card */}
-              <div className="lg:col-span-1">
+              <div className="lg:col-span-1 animate-slide-in-right" style={{ animationDelay: '0.4s' }}>
                 <Card className="sticky top-6">
                   <CardContent className="p-0">
                     {/* Video Preview */}
@@ -615,7 +851,7 @@ const CourseDetail: React.FC<CourseDetailProps> = () => {
       </div>
 
       {/* Content Tabs */}
-      <div className="max-w-7xl mx-auto p-6">
+      <div className="max-w-7xl mx-auto p-6 animate-fade-in" style={{ animationDelay: '0.6s' }}>
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
           <TabsList className="grid w-full grid-cols-5">
             <TabsTrigger value="overview">Overview</TabsTrigger>
@@ -630,7 +866,7 @@ const CourseDetail: React.FC<CourseDetailProps> = () => {
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
               <div className="lg:col-span-2 space-y-6">
                 {/* What you'll learn */}
-                <Card>
+                <Card className="animate-fade-in" style={{ animationDelay: '0.1s' }}>
                   <CardHeader>
                     <CardTitle className="flex items-center gap-2">
                       <Target className="h-5 w-5" />
@@ -650,7 +886,7 @@ const CourseDetail: React.FC<CourseDetailProps> = () => {
                 </Card>
 
                 {/* Requirements */}
-                <Card>
+                <Card className="animate-fade-in" style={{ animationDelay: '0.2s' }}>
                   <CardHeader>
                     <CardTitle>Persyaratan</CardTitle>
                   </CardHeader>
@@ -667,7 +903,7 @@ const CourseDetail: React.FC<CourseDetailProps> = () => {
                 </Card>
 
                 {/* Features */}
-                <Card>
+                <Card className="animate-fade-in" style={{ animationDelay: '0.3s' }}>
                   <CardHeader>
                     <CardTitle>Fitur Kursus</CardTitle>
                   </CardHeader>
@@ -686,7 +922,7 @@ const CourseDetail: React.FC<CourseDetailProps> = () => {
 
               {/* Course Stats */}
               <div className="space-y-6">
-                <Card>
+                <Card className="animate-fade-in" style={{ animationDelay: '0.4s' }}>
                   <CardHeader>
                     <CardTitle>Statistik Kursus</CardTitle>
                   </CardHeader>
@@ -716,7 +952,7 @@ const CourseDetail: React.FC<CourseDetailProps> = () => {
                     </div>
                     <div className="flex justify-between">
                       <span className="text-gray-600">Bahasa</span>
-                      <span className="font-medium">Bahasa Indonesia</span>
+                      <span className="font-medium">{course.language === 'English' ? 'Bahasa Inggris' : course.language}</span>
                     </div>
                     <div className="flex justify-between">
                       <span className="text-gray-600">Sertifikat</span>
@@ -730,79 +966,46 @@ const CourseDetail: React.FC<CourseDetailProps> = () => {
 
           {/* Curriculum Tab */}
           <TabsContent value="curriculum">
-            <Card>
+            <Card className="animate-fade-in">
               <CardHeader>
                 <CardTitle>Kurikulum Kursus</CardTitle>
                 <p className="text-gray-600">
-                  {course.lessons} pelajaran • {course.duration} total
+                  {course.stats?.totalLessons || course.lessons} pelajaran • {course.duration} total
                 </p>
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
-                  {/* Mock curriculum sections */}``
-                  {[
-                    {
-                      title: "Pengenalan dan Setup",
-                      lessons: 4,
-                      duration: "45 menit",
-                      items: [
-                        "Selamat datang di kursus",
-                        "Setup environment development",
-                        "Pengenalan tools yang digunakan",
-                        "Project pertama"
-                      ]
-                    },
-                    {
-                      title: "Konsep Dasar",
-                      lessons: 6,
-                      duration: "1 jam 30 menit",
-                      items: [
-                        "Konsep fundamental",
-                        "Best practices",
-                        "Common patterns",
-                        "Hands-on practice",
-                        "Quiz: Konsep dasar",
-                        "Assignment: Project mini"
-                      ]
-                    },
-                    {
-                      title: "Implementasi Lanjutan",
-                      lessons: 8,
-                      duration: "2 jam 15 menit",
-                      items: [
-                        "Advanced concepts",
-                        "Real-world examples",
-                        "Performance optimization",
-                        "Testing strategies",
-                        "Deployment",
-                        "Monitoring",
-                        "Quiz: Advanced topics",
-                        "Final project"
-                      ]
-                    }
-                  ].map((section, sectionIndex) => (
-                    <div key={sectionIndex} className="border rounded-lg">
-                      <div className="p-4 bg-gray-50 border-b">
-                        <div className="flex justify-between items-center">
-                          <h3 className="font-semibold">{section.title}</h3>
-                          <span className="text-sm text-gray-600">
-                            {section.lessons} pelajaran • {section.duration}
-                          </span>
-                        </div>
-                      </div>
-                      <div className="p-4 space-y-2">
-                        {section.items.map((item, itemIndex) => (
-                          <div key={itemIndex} className="flex items-center gap-3 py-2">
-                            <Play className="h-4 w-4 text-gray-400" />
-                            <span className="flex-1">{item}</span>
-                            <span className="text-sm text-gray-500">
-                              {Math.floor(Math.random() * 15) + 5} menit
+                  {course.sections && course.sections.length > 0 ? (
+                    course.sections.map((section, sectionIndex) => (
+                      <div key={section.id} className="border rounded-lg animate-fade-in" style={{ animationDelay: `${sectionIndex * 0.1}s` }}>
+                        <div className="p-4 bg-gray-50 border-b">
+                          <div className="flex justify-between items-center">
+                            <h3 className="font-semibold">{section.title}</h3>
+                            <span className="text-sm text-gray-600">
+                              {section.lessons.length} pelajaran
                             </span>
                           </div>
-                        ))}
+                        </div>
+                        <div className="p-4 space-y-2">
+                          {section.lessons.map((lesson, lessonIndex) => (
+                            <div key={lesson.id} className="flex items-center gap-3 py-2">
+                              <Play className="h-4 w-4 text-gray-400" />
+                              <span className="flex-1">{lesson.title}</span>
+                              <span className="text-sm text-gray-500">
+                                {lesson.duration}
+                              </span>
+                            </div>
+                          ))}
+                        </div>
                       </div>
+                    ))
+                  ) : (
+                    // Fallback for courses without sections data
+                    <div className="text-center py-8 text-gray-500">
+                      <BookOpen className="h-12 w-12 mx-auto mb-4 opacity-50" />
+                      <p>Kurikulum akan segera tersedia</p>
                     </div>
-                  ))}
+                  )}
                 </div>
               </CardContent>
             </Card>
@@ -810,7 +1013,7 @@ const CourseDetail: React.FC<CourseDetailProps> = () => {
 
           {/* Instructor Tab */}
           <TabsContent value="instructor">
-            <Card>
+            <Card className="animate-fade-in">
               <CardContent className="p-6">
                 <div className="flex gap-6">
                   <img
@@ -821,6 +1024,7 @@ const CourseDetail: React.FC<CourseDetailProps> = () => {
                   <div className="flex-1 space-y-4">
                     <div>
                       <h2 className="text-2xl font-bold">{course.instructor.name}</h2>
+                      <p className="text-lg text-gray-600 mb-2">{course.instructor.specialization}</p>
                       <div className="flex items-center gap-2 mt-2">
                         <Star className="h-5 w-5 fill-yellow-400 text-yellow-400" />
                         <span className="font-medium">{course.instructor.rating}</span>
@@ -828,23 +1032,26 @@ const CourseDetail: React.FC<CourseDetailProps> = () => {
                       </div>
                     </div>
                     
-                    <p className="text-gray-700 leading-relaxed">{course.instructor.bio}</p>
+                    <p className="text-gray-700 leading-relaxed">
+                      Instruktur berpengalaman dengan spesialisasi di bidang {course.instructor.specialization}. 
+                      Bergabung sejak {new Date(course.instructor.joinDate).getFullYear()} dan telah mengajar ribuan siswa.
+                    </p>
                     
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-4 pt-4">
                       <div className="text-center">
-                        <div className="text-2xl font-bold text-blue-600">50+</div>
+                        <div className="text-2xl font-bold text-blue-600">{course.instructor.coursesCount}</div>
                         <div className="text-sm text-gray-600">Kursus</div>
                       </div>
                       <div className="text-center">
-                        <div className="text-2xl font-bold text-green-600">10K+</div>
+                        <div className="text-2xl font-bold text-green-600">{formatNumber(course.instructor.students)}</div>
                         <div className="text-sm text-gray-600">Siswa</div>
                       </div>
                       <div className="text-center">
-                        <div className="text-2xl font-bold text-purple-600">5+</div>
+                        <div className="text-2xl font-bold text-purple-600">{new Date().getFullYear() - new Date(course.instructor.joinDate).getFullYear()}+</div>
                         <div className="text-sm text-gray-600">Tahun</div>
                       </div>
                       <div className="text-center">
-                        <div className="text-2xl font-bold text-orange-600">4.8</div>
+                        <div className="text-2xl font-bold text-orange-600">{course.instructor.rating}</div>
                         <div className="text-sm text-gray-600">Rating</div>
                       </div>
                     </div>
@@ -856,15 +1063,15 @@ const CourseDetail: React.FC<CourseDetailProps> = () => {
 
           {/* Reviews Tab */}
           <TabsContent value="reviews">
-            <Card>
+            <Card className="animate-fade-in">
               <CardHeader>
                 <CardTitle>Ulasan Siswa</CardTitle>
                 <div className="flex items-center gap-4">
                   <div className="flex items-center gap-2">
                     <Star className="h-5 w-5 fill-yellow-400 text-yellow-400" />
-                    <span className="text-xl font-bold">{course.rating}</span>
+                    <span className="text-xl font-bold">{course.stats?.averageTestimonialRating || course.rating || 0}</span>
                   </div>
-                  <span className="text-gray-600">({course.reviews} ulasan)</span>
+                  <span className="text-gray-600">({course.stats?.totalTestimonials || course.testimonials?.length || 0} ulasan)</span>
                 </div>
               </CardHeader>
               <CardContent>
@@ -887,60 +1094,46 @@ const CourseDetail: React.FC<CourseDetailProps> = () => {
                     </div>
                   </div>
 
-                  {/* Sample reviews */}
+                  {/* Real testimonials */}
                   <div className="space-y-4">
-                    {[
-                      {
-                        name: "Ahmad Rizki",
-                        avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=40&h=40&fit=crop&crop=face",
-                        rating: 5,
-                        date: "2 minggu lalu",
-                        comment: "Kursus yang sangat bagus! Materi dijelaskan dengan sangat detail dan mudah dipahami. Instruktur sangat berpengalaman dan responsif dalam menjawab pertanyaan."
-                      },
-                      {
-                        name: "Sari Dewi",
-                        avatar: "https://images.unsplash.com/photo-1494790108755-2616b612b786?w=40&h=40&fit=crop&crop=face",
-                        rating: 5,
-                        date: "1 bulan lalu",
-                        comment: "Sangat recommended! Project-based learning yang membuat saya bisa langsung praktek. Sekarang saya sudah bisa membuat aplikasi sendiri."
-                      },
-                      {
-                        name: "Budi Santoso",
-                        avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=40&h=40&fit=crop&crop=face",
-                        rating: 4,
-                        date: "1 bulan lalu",
-                        comment: "Kursus yang bagus, tapi mungkin bisa ditambahkan lebih banyak contoh real-world case. Overall sangat puas dengan materinya."
-                      }
-                    ].map((review, index) => (
-                      <div key={index} className="border-b pb-4 last:border-b-0">
-                        <div className="flex gap-4">
-                          <img
-                            src={review.avatar}
-                            alt={review.name}
-                            className="w-10 h-10 rounded-full object-cover"
-                          />
-                          <div className="flex-1">
-                            <div className="flex items-center gap-2 mb-2">
-                              <span className="font-medium">{review.name}</span>
-                              <div className="flex items-center gap-1">
-                                {[1, 2, 3, 4, 5].map((star) => (
-                                  <Star
-                                    key={star}
-                                    className={`h-4 w-4 ${
-                                      star <= review.rating
-                                        ? 'fill-yellow-400 text-yellow-400'
-                                        : 'text-gray-300'
-                                    }`}
-                                  />
-                                ))}
+                    {course.testimonials && course.testimonials.length > 0 ? (
+                      course.testimonials.map((testimonial, index) => (
+                        <div key={testimonial.id} className="border-b pb-4 last:border-b-0 animate-fade-in" style={{ animationDelay: `${index * 0.1}s` }}>
+                          <div className="flex gap-4">
+                            <img
+                              src={testimonial.avatar}
+                              alt={testimonial.name}
+                              className="w-10 h-10 rounded-full object-cover"
+                            />
+                            <div className="flex-1">
+                              <div className="flex items-center gap-2 mb-2">
+                                <span className="font-medium">{testimonial.name}</span>
+                                <span className="text-sm text-gray-500">{testimonial.title}</span>
+                                <div className="flex items-center gap-1">
+                                  {[1, 2, 3, 4, 5].map((star) => (
+                                    <Star
+                                      key={star}
+                                      className={`h-4 w-4 ${
+                                        star <= Math.floor(testimonial.rating)
+                                          ? 'fill-yellow-400 text-yellow-400'
+                                          : 'text-gray-300'
+                                      }`}
+                                    />
+                                  ))}
+                                </div>
+                                <span className="text-sm text-gray-500">{testimonial.rating}</span>
                               </div>
-                              <span className="text-sm text-gray-500">{review.date}</span>
+                              <p className="text-gray-700">{testimonial.quote}</p>
                             </div>
-                            <p className="text-gray-700">{review.comment}</p>
                           </div>
                         </div>
+                      ))
+                    ) : (
+                      <div className="text-center py-8 text-gray-500">
+                        <MessageCircle className="h-12 w-12 mx-auto mb-4 opacity-50" />
+                        <p>Belum ada ulasan untuk kursus ini</p>
                       </div>
-                    ))}
+                    )}
                   </div>
                 </div>
               </CardContent>
@@ -949,39 +1142,25 @@ const CourseDetail: React.FC<CourseDetailProps> = () => {
 
           {/* FAQ Tab */}
           <TabsContent value="faq">
-            <Card>
+            <Card className="animate-fade-in">
               <CardHeader>
                 <CardTitle>Frequently Asked Questions</CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
-                  {[
-                    {
-                      question: "Apakah saya mendapat akses seumur hidup?",
-                      answer: "Ya, setelah membeli kursus ini Anda akan mendapat akses seumur hidup ke semua materi kursus, termasuk update materi di masa depan."
-                    },
-                    {
-                      question: "Apakah ada sertifikat setelah menyelesaikan kursus?",
-                      answer: "Ya, Anda akan mendapat sertifikat digital setelah menyelesaikan semua materi dan lulus quiz akhir dengan nilai minimal 80%."
-                    },
-                    {
-                      question: "Bagaimana jika saya tidak puas dengan kursus ini?",
-                      answer: "Kami menyediakan garansi 30 hari uang kembali. Jika dalam 30 hari pertama Anda tidak puas, kami akan mengembalikan uang Anda 100%."
-                    },
-                    {
-                      question: "Apakah saya bisa mengakses kursus dari mobile?",
-                      answer: "Ya, platform kami fully responsive dan Anda bisa mengakses kursus dari smartphone, tablet, atau komputer kapan saja dan dimana saja."
-                    },
-                    {
-                      question: "Apakah ada forum diskusi untuk bertanya?",
-                      answer: "Ya, setiap kursus memiliki forum diskusi dimana Anda bisa bertanya dan berdiskusi dengan instruktur dan sesama siswa."
-                    }
-                  ].map((faq, index) => (
-                    <div key={index} className="border rounded-lg p-4">
-                      <h3 className="font-semibold mb-2">{faq.question}</h3>
-                      <p className="text-gray-700">{faq.answer}</p>
+                  {course.faqs && course.faqs.length > 0 ? (
+                    course.faqs.map((faq, index) => (
+                      <div key={faq.id} className="border rounded-lg p-4 animate-fade-in" style={{ animationDelay: `${index * 0.1}s` }}>
+                        <h3 className="font-semibold mb-2">{faq.question}</h3>
+                        <p className="text-gray-700">{faq.answer}</p>
+                      </div>
+                    ))
+                  ) : (
+                    <div className="text-center py-8 text-gray-500">
+                      <MessageCircle className="h-12 w-12 mx-auto mb-4 opacity-50" />
+                      <p>FAQ akan segera tersedia</p>
                     </div>
-                  ))}
+                  )}
                 </div>
               </CardContent>
             </Card>
